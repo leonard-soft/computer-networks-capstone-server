@@ -1,8 +1,10 @@
 package org.example.jpa;
 
+import org.example.jpa.EMFProvider;
+
 import jakarta.persistence.EntityManager;  /* Entity manager lib */
 import jakarta.persistence.EntityManagerFactory; /* Entity Factory lib */
-import jakarta.persistence.Persistence; /* lib to have access to database */
+
 
 public class JpaUtil {
 
@@ -15,7 +17,7 @@ public class JpaUtil {
     static {
         try {
            /* this is the entityCreationFactory manager  */ 
-           entityManager = Persistence.createEntityManagerFactory("my-persistence-unit");
+           entityManager = EMFProvider.createEFM();
         } catch (Exception e) {
             System.err.println("EntityManagerFactory: " + e.getMessage());
             throw new ExceptionInInitializerError(e);
