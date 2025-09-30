@@ -7,6 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EMFProvider {
+
+    /**
+     * Basically this method return a database connection,
+     * similar than javascript and python and another languages.
+     * 
+     * @return EntityManagerFactory object
+     */
     public static EntityManagerFactory createEFM() {
         Map<String, String> config = new HashMap<>();
 
