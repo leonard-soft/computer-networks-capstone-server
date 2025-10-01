@@ -42,3 +42,4 @@ build/
 ### Enviroment ###
 
 .env
+hash.properties
