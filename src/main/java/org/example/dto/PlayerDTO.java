@@ -4,12 +4,14 @@ public class PlayerDTO {
     private int userId;
     private String username;
     private String password;
+    private String passwordSalt;
     private boolean userState;
     private int userMatchWinCount;
 
-    public PlayerDTO(String username, String password){
+    public PlayerDTO(String username, String password, String passwordSalt){
         this.username = username;
         this.password = password;
+        this.passwordSalt = passwordSalt;
         this.userState = false;
         this.userMatchWinCount = 0;
     }
