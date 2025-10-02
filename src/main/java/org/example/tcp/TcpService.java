@@ -5,6 +5,10 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.example.dto.Request;
+import org.example.dto.RequestPayload;
+import org.example.service.UserService;
+
 import com.google.gson.Gson;
 
 public class TcpService {
@@ -53,9 +57,27 @@ public class TcpService {
 
                     /** get the client message */
                     String line = reader.readLine();
+                    UserService userService = new UserService();
                 
                     if (line != null) {
-                        /*commands block */
+                        
+                        Gson gson = new Gson();
+                        Request req = gson.fromJson(line, Request.class);
+
+                        switch (req.getType()) {
+                            case "register":
+                                System.out.println("Request type: " + req.getType());
+                                RequestPayload requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                userService.registerUser(requestPayload);
+                                break;
+                        
+                            case "login":
+                                System.out.println("Tipo de petición: " + req.getType());
+                                break;
+                        
+                            default:
+                                System.out.println("Tipo de petición desconocido: " + req.getType());
+                        }
                     }
                 } 
                 catch (Exception e)
