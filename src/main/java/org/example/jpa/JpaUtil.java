@@ -12,12 +12,12 @@ public class JpaUtil {
      * this is the entity manager factory, with this you 
      * have access to the database connection with java.
      */
-    private static final EntityManagerFactory entityManager;
+    private static final EntityManagerFactory EntityManagerFactory;
 
     static {
         try {
            /* this is the entityCreationFactory manager  */ 
-           entityManager = EMFProvider.createEFM();
+           EntityManagerFactory = EMFProvider.createEFM();
         } catch (Exception e) {
             System.err.println("EntityManagerFactory: " + e.getMessage());
             throw new ExceptionInInitializerError(e);
@@ -32,7 +32,7 @@ public class JpaUtil {
      * @return Entity Manager Object
      */
     public static EntityManager getEntityManager() {
-        return entityManager.createEntityManager();
+        return EntityManagerFactory.createEntityManager();
     }
 
     /**
@@ -40,8 +40,8 @@ public class JpaUtil {
      * the entity manager.
      */
     public static void close() {
-        if (entityManager != null && entityManager.isOpen()) {
-            entityManager.close();
+        if (EntityManagerFactory != null && EntityManagerFactory.isOpen()) {
+            EntityManagerFactory.close();
         }
     }
 
