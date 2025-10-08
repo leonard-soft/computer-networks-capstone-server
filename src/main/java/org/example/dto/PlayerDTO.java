@@ -1,11 +1,22 @@
 package org.example.dto;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "game_user")
 public class PlayerDTO {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
+    @Column(name = "username")
     private String username;
+    @Column(name = "password")
     private String password;
+    @Column
     private String passwordSalt;
+    @Column(name = "user_state")
     private boolean userState;
+    @Column(name = "user_match_win_quantity")
     private int userMatchWinCount;
 
     public PlayerDTO(String username, String password, String passwordSalt){

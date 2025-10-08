@@ -42,4 +42,4 @@ build/
 ### Enviroment ###
 
 .env
-hash.properties
+src/main/resources/hash.properties

@@ -2,8 +2,10 @@ package org.example.service;
 
 import javax.management.Query;
 
+import org.example.dto.PlayerDTO;
 import org.example.dto.RequestPayload;
 import org.example.hash.HashMethods;
+import org.example.jpa.AuthQueries;
 import org.example.jpa.JpaUtil;
 
 import jakarta.persistence.EntityManager;
@@ -27,7 +29,7 @@ public class UserService {
                 "VALUES (?, ?, ?, ?)"
             )
             .setParameter(1, requestPayload.username)
-            .setParameter(2, hashMethods.hash(requestPayload.Password))
+            .setParameter(2, hashMethods.hash(requestPayload.password))
             .setParameter(3, false) 
             .setParameter(4, 0)
             .executeUpdate();
@@ -41,5 +43,20 @@ public class UserService {
         } finally {
             entityManager.close();
         }
+    }
+
+    /**
+     * This method returns true if the credentials are correct, and false if not.
+     *
+     * @param requestPayload data from the user
+     */
+    public boolean loginUser(RequestPayload requestPayload){
+        HashMethods hashMethods = new HashMethods();
+        AuthQueries  authQueries = new AuthQueries();
+
+        PlayerDTO player = authQueries.findPlayerByUsername(requestPayload.username);
+        if (player == null) return false;
+
+        return hashMethods.compareHash(requestPayload.password, player.getPassword());
     }
 }
