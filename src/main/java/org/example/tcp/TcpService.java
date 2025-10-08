@@ -2,9 +2,11 @@ package org.example.tcp;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.example.dto.LoginResponseDTO;
 import org.example.dto.Request;
 import org.example.dto.RequestPayload;
 import org.example.service.UserService;
@@ -72,11 +74,28 @@ public class TcpService {
                                 break;
                         
                             case "login":
-                                System.out.println("Tipo de petición: " + req.getType());
+                                try{
+                                    System.out.println("Request type: " + req.getType());
+                                    requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    boolean success = userService.loginUser(requestPayload);
+                                    String message = success ? "Login succesful" : "Invalid credentials";
+                                    LoginResponseDTO response = new LoginResponseDTO(success, message);
+                                    String jsonResponse = gson.toJson(response) + "\n";
+                                    OutputStream out = client.getOutputStream();
+                                    out.write(jsonResponse.getBytes());
+                                    out.flush();
+                                }catch(Exception e){
+                                    LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage());
+                                    String jsonError = gson.toJson(errorResponse) + "\n";
+                                    OutputStream out = client.getOutputStream();
+                                    out.write(jsonError.getBytes());
+                                    out.flush();
+                                }
+
                                 break;
                         
                             default:
-                                System.out.println("Tipo de petición desconocido: " + req.getType());
+                                System.out.println("Unknown request type: " + req.getType());
                         }
                     }
                 } 
@@ -84,13 +103,16 @@ public class TcpService {
                 {
                     e.printStackTrace();
                 }
+                // It could generate a problem, because we need that thread keep working, CGaleano are going to commit it.
+                /*
                 finally {
+                    
                     try {
                         /** 
                          * this can be generate an exception for
                          * this reason this is into the try catch
                          * block
-                         */
+                         *//*
                         client.close();
                     }
                     catch (Exception e)
@@ -98,6 +120,7 @@ public class TcpService {
                         e.printStackTrace();
                     }
                 }
+                */
 
             }).start();
         }  
