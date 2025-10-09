@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
+import org.example.dto.ConnectedUsersResponseDTO;
 import org.example.dto.LoginResponseDTO;
 import org.example.dto.Request;
 import org.example.dto.RequestPayload;
@@ -105,6 +107,23 @@ public class TcpService {
                                     out.flush();
                                 }
 
+                                break;
+                            case "get_online_users":
+                                try {
+                                    System.out.println("Request type: " + req.getType());
+                                    List<String> onlineUsers = userService.getOnlineUsers();
+                                    ConnectedUsersResponseDTO response = new ConnectedUsersResponseDTO(onlineUsers.toArray(new String[0]));
+                                    String jsonResponse = gson.toJson(response) + "\n";
+                                    OutputStream out = client.getOutputStream();
+                                    out.write(jsonResponse.getBytes());
+                                    out.flush();
+                                } catch (Exception e) {
+                                    ConnectedUsersResponseDTO errorResponse = new ConnectedUsersResponseDTO(new String[0]);
+                                    String jsonError = gson.toJson(errorResponse) + "\n";
+                                    OutputStream out = client.getOutputStream();
+                                    out.write(jsonError.getBytes());
+                                    out.flush();
+                                }  
                                 break;
                         
                             default:

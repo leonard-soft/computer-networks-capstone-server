@@ -37,6 +37,8 @@ public class Queries {
             );
 
             return query.getResultList();
+        }catch(Exception e){
+            throw new RuntimeException("Error fetiching online users: " + e.getMessage());
         }finally{
             em.close();
         }

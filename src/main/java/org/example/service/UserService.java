@@ -1,5 +1,7 @@
 package org.example.service;
 
+import java.util.List;
+
 import org.example.dto.PlayerDTO;
 import org.example.dto.RequestPayload;
 import org.example.hash.HashMethods;
@@ -66,10 +68,17 @@ public class UserService {
 
     public void updateUserState(String username, boolean state){
         EntityManager em = JpaUtil.getEntityManager();
-        PlayerDTO player = em.find(PlayerDTO.class, username);
-        if(player != null){
-            player.setUserState(state);
-            em.merge(player);
+        try {
+            PlayerDTO player = em.find(PlayerDTO.class, username);
+            if (player != null) {
+                player.setUserState(state);
+                em.getTransaction().begin();
+                em.merge(player);
+                em.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new RuntimeException("Error updating user state: " + e.getMessage());
         }
     }
 
@@ -77,5 +86,8 @@ public class UserService {
     /**
      * This method returns all the online users on the DB
      */
-    
+    public List<String> getOnlineUsers(){
+        Queries queries = new Queries();
+        return queries.getOnlineUsers();
+    }
 }
