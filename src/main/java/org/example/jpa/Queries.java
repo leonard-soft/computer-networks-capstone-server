@@ -1,11 +1,12 @@
 package org.example.jpa;
 
+import org.example.dto.PlayerDTO;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
-import org.example.dto.PlayerDTO;
 
-public class AuthQueries {
+public class Queries {
 
     /**
      * This method is to do the query on the database to find the player by the id.
@@ -24,5 +25,4 @@ public class AuthQueries {
             em.close();
         }
     }
-
 }
