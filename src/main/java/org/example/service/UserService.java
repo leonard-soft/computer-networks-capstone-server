@@ -1,12 +1,10 @@
 package org.example.service;
 
-import javax.management.Query;
-
 import org.example.dto.PlayerDTO;
 import org.example.dto.RequestPayload;
 import org.example.hash.HashMethods;
-import org.example.jpa.AuthQueries;
 import org.example.jpa.JpaUtil;
+import org.example.jpa.Queries;
 
 import jakarta.persistence.EntityManager;
 
@@ -52,11 +50,32 @@ public class UserService {
      */
     public boolean loginUser(RequestPayload requestPayload){
         HashMethods hashMethods = new HashMethods();
-        AuthQueries  authQueries = new AuthQueries();
+        Queries  queries = new Queries();
 
-        PlayerDTO player = authQueries.findPlayerByUsername(requestPayload.username);
+        PlayerDTO player = queries.findPlayerByUsername(requestPayload.username);
         if (player == null) return false;
 
         return hashMethods.compareHash(requestPayload.password, player.getPassword());
     }
+
+
+    /**
+     * This method update user state  
+     * @param String username, boolean state
+     */
+
+    public void updateUserState(String username, boolean state){
+        EntityManager em = JpaUtil.getEntityManager();
+        PlayerDTO player = em.find(PlayerDTO.class, username);
+        if(player != null){
+            player.setUserState(state);
+            em.merge(player);
+        }
+    }
+
+
+    /**
+     * This method returns all the online users on the DB
+     */
+    
 }
