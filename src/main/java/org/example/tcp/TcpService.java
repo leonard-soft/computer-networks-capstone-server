@@ -47,7 +47,7 @@ public class TcpService {
             Socket client = tcpSocket.accept();
 
             System.out.println("Client Connection:" + client.getInetAddress());
-            
+
             /* thread to attend a long quantity of request */
             new Thread(() -> {
                 try 
