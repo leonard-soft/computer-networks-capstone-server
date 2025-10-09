@@ -1,5 +1,7 @@
 package org.example.jpa;
 
+import org.example.dto.GameDTO;
+import org.example.dto.GameHasUser;
 import org.example.dto.PlayerDTO;
 
 import jakarta.persistence.EntityManager;
@@ -24,5 +26,51 @@ public class Queries {
         }finally {
             em.close();
         }
+    }
+
+    public GameDTO createNewGame() {
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        GameDTO gameDTO = null;
+        try {
+            entityManager.getTransaction().begin();
+            GameDTO game = new GameDTO();
+            game.setGame_status(false);
+            entityManager.persist(game);
+            entityManager.getTransaction().commit();
+            gameDTO = game;
+
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+
+        return gameDTO;
+    }
+
+    public GameHasUser registerUserToGame(GameDTO game, PlayerDTO user){
+        EntityManager entityManager = JpaUtil.getEntityManager();
+        GameHasUser gameHasUser = null;
+        try {
+            entityManager.getTransaction().begin();
+            GameHasUser gameRegister = new GameHasUser();
+            gameRegister.setGame_id(game);
+            gameRegister.setUser_id(user);
+            gameRegister.setUsers_status(true);
+            entityManager.persist(gameRegister);
+            entityManager.getTransaction().commit();
+            gameHasUser = gameRegister;
+        } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return gameHasUser;
     }
 }
