@@ -1,12 +1,12 @@
 package org.example.service;
 
-import java.util.List;
+import javax.management.Query;
 
 import org.example.dto.PlayerDTO;
 import org.example.dto.RequestPayload;
 import org.example.hash.HashMethods;
+import org.example.jpa.AuthQueries;
 import org.example.jpa.JpaUtil;
-import org.example.jpa.Queries;
 
 import jakarta.persistence.EntityManager;
 
@@ -52,7 +52,8 @@ public class UserService {
      */
     public boolean loginUser(RequestPayload requestPayload){
         HashMethods hashMethods = new HashMethods();
-        Queries  queries = new Queries();
+        Queries queries = new Queries();
+
 
         PlayerDTO player = queries.findPlayerByUsername(requestPayload.username);
         if (player == null) return false;
@@ -62,7 +63,7 @@ public class UserService {
 
 
     /**
-     * This method update user state  
+     * This method update user state
      * @param String username, boolean state
      */
 
