@@ -1,11 +1,14 @@
 package org.example.tcp;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
+import org.example.dto.*;
 import org.example.dto.LoginResponseDTO;
 import org.example.dto.RegisterResponseDTO;
 import org.example.dto.Request;
@@ -13,6 +16,7 @@ import org.example.dto.RequestPayload;
 import org.example.service.UserService;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public class TcpService {
 
@@ -42,31 +46,34 @@ public class TcpService {
         /* showing if the server is running */
         System.out.println("TCP socket: listening in port " + this.port);
 
+        /* This while loop is for the creation of new threads to handle new clients*/
         while (true) {
 
             /* this is blocked waiting a client connection */
             Socket client = tcpSocket.accept();
 
             System.out.println("Client Connection:" + client.getInetAddress());
-            
+
             /* thread to attend a long quantity of request */
             new Thread(() -> {
-                try 
-                {
-                    /* Reading the client serialized message */
-                    BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(client.getInputStream())
-                    );
+                String username = null;
 
-                    /** get the client message */
-                    String line = reader.readLine();
+                try {
+                    OutputStream out = client.getOutputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    Gson gson = new Gson();
                     UserService userService = new UserService();
-                
-                    if (line != null) {
-                        
-                        Gson gson = new Gson();
-                        Request req = gson.fromJson(line, Request.class);
 
+                    while (true) {
+                        String line = reader.readLine();
+                        if (line == null) { // Disconnected client
+                            if (username != null) {
+                                userService.updateUserState(username, false);
+                            }
+                            break;
+                        }
+
+                        Request req = gson.fromJson(line, Request.class);
                         switch (req.getType()) {
                             case "register":
                                 System.out.println("Request type: " + req.getType());
@@ -77,69 +84,77 @@ public class TcpService {
                                     String message = "register completed succesfully";
                                     RegisterResponseDTO register = new RegisterResponseDTO(true, message);
                                     String jsonResponse = gson.toJson(register) + "\n";
-                                    
-                                    OutputStream out = client.getOutputStream();
+                                    client.getOutputStream();
                                     out.write(jsonResponse.getBytes());
                                     out.flush();
                                 } catch (Exception e) {
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    OutputStream out = client.getOutputStream();
+                                    client.getOutputStream();
                                     out.write(jsonError.getBytes());
                                     out.flush();
                                 }
                                 break;
-                        
                             case "login":
-                                try{
+                                try {
+                                    String message;
                                     System.out.println("Request type: " + req.getType());
                                     requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    if (requestPayload == null || requestPayload.username == null) {
+                                        throw new IllegalArgumentException("Invalid payload: Username is missing");
+                                    }
                                     boolean success = userService.loginUser(requestPayload);
-                                    String message = success ? "Login succesful" : "Invalid credentials";
+                                    if (success) {
+                                        message = "Login successful";
+                                        username = requestPayload.username;
+                                        userService.updateUserState(username, true);
+                                    } else {
+                                        message = "Invalid credentials";
+                                    }
                                     LoginResponseDTO response = new LoginResponseDTO(success, message);
                                     String jsonResponse = gson.toJson(response) + "\n";
-
-                                    OutputStream out = client.getOutputStream();
                                     out.write(jsonResponse.getBytes());
                                     out.flush();
-                                }catch(Exception e){
+                                } catch (IOException | JsonSyntaxException | IllegalArgumentException e) {
                                     LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    OutputStream out = client.getOutputStream();
+                                    out.write(jsonError.getBytes());
+                                    out.flush();
+                                }
+
+                                break;
+                            case "get_online_users":
+                                try {
+                                    System.out.println("Request type: " + req.getType());
+                                    List<String> onlineUsers = userService.getOnlineUsers();
+                                    ConnectedUsersResponseDTO response = new ConnectedUsersResponseDTO(onlineUsers.toArray(new String[0]));
+                                    String jsonResponse = gson.toJson(response) + "\n";
+                                    out.write(jsonResponse.getBytes());
+                                    out.flush();
+                                } catch (IOException | RuntimeException e) {
+                                    ConnectedUsersResponseDTO errorResponse = new ConnectedUsersResponseDTO(new String[0]);
+                                    String jsonError = gson.toJson(errorResponse) + "\n";
                                     out.write(jsonError.getBytes());
                                     out.flush();
                                 }
                                 break;
-                        
                             default:
                                 System.out.println("Unknown request type: " + req.getType());
                         }
                     }
-                } 
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                // It could generate a problem, because we need that thread keep working, CGaleano are going to commit it.
-                /*
-                finally {
-                    
-                    try {
-                        /** 
-                         * this can be generate an exception for
-                         * this reason this is into the try catch
-                         * block
-                         *//*
-                        client.close();
+                } catch (IOException | JsonSyntaxException e) {
+                    if (username != null) {
+                        UserService  userService = new UserService();
+                        userService.updateUserState(username, false);
                     }
-                    catch (Exception e)
-                    {
+                } finally {
+                    try {
+                        client.close();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-                */
-
             }).start();
-        }  
+        }
     }
 }

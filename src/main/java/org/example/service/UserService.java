@@ -61,7 +61,8 @@ public class UserService {
 
     /**
      * This method update user state  
-     * @param String username, boolean state
+     * @param  username, boolean state
+     *
      */
     public void updateUserState(String username, boolean state){
         EntityManager em = JpaUtil.getEntityManager();
