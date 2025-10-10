@@ -43,3 +43,7 @@ build/
 
 .env
 src/main/resources/hash.properties
+
+### KEY STORE FILE ###
+
+./serverkeystore.jks
