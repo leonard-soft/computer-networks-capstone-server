@@ -19,7 +19,7 @@ public class Queries {
     public Player findPlayerByUsername(String username){
         EntityManager em = JpaUtil.getEntityManager();
         try {
-            Query query = em.createQuery("SELECT p FROM PlayerDTO p WHERE p.username = :username", Player.class);
+            Query query = em.createQuery("SELECT p FROM Player p WHERE p.username = :username", Player.class);
             query.setParameter("username", username);
             return (Player) query.getSingleResult();
         }catch (NoResultException e){
@@ -33,7 +33,7 @@ public class Queries {
         EntityManager em = JpaUtil.getEntityManager();
         try {
             TypedQuery<String> query = em.createQuery(
-                "SELECT p.username FROM PlayerDTO p WHERE p.userState = true", String.class
+                "SELECT p.username FROM Player p WHERE p.userState = true", String.class
             );
 
             return query.getResultList();
