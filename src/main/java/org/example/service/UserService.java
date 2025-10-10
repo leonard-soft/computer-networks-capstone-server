@@ -56,7 +56,6 @@ public class UserService {
 
         PlayerDTO player = queries.findPlayerByUsername(requestPayload.username);
         if (player == null) return false;
-
         return hashMethods.compareHash(requestPayload.password, player.getPassword());
     }
 
@@ -65,7 +64,6 @@ public class UserService {
      * This method update user state  
      * @param String username, boolean state
      */
-
     public void updateUserState(String username, boolean state){
         EntityManager em = JpaUtil.getEntityManager();
         try {
@@ -81,7 +79,6 @@ public class UserService {
             throw new RuntimeException("Error updating user state: " + e.getMessage());
         }
     }
-
 
     /**
      * This method returns all the online users on the DB
