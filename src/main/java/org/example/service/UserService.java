@@ -5,10 +5,12 @@ import javax.management.Query;
 import org.example.dto.PlayerDTO;
 import org.example.dto.RequestPayload;
 import org.example.hash.HashMethods;
-import org.example.jpa.AuthQueries;
+import org.example.jpa.Queries;
 import org.example.jpa.JpaUtil;
 
 import jakarta.persistence.EntityManager;
+
+import java.util.List;
 
 public class UserService {
     
@@ -64,7 +66,7 @@ public class UserService {
 
     /**
      * This method update user state
-     * @param String username, boolean state
+     * @param username, boolean state
      */
 
     public void updateUserState(String username, boolean state){
