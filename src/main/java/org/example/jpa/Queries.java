@@ -71,7 +71,7 @@ public class Queries {
      * @param user user or client to register in the game
      * @return GameHasUser
      */
-    public GameHasUser registerUserToGame(GameDTO game, PlayerDTO user){
+    public GameHasUser registerUserToGame(GameDTO game, Player user){
         EntityManager entityManager = JpaUtil.getEntityManager();
         GameHasUser gameHasUser = null;
         try {

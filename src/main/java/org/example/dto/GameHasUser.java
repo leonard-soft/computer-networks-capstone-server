@@ -1,6 +1,7 @@
 package org.example.dto;
 
 import jakarta.persistence.*;
+import org.example.entity.Player;
 
 @Entity
 @Table(name = "game_has_users")
@@ -9,16 +10,16 @@ public class GameHasUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @ManyToMany
-    @Column(name = "game_id")
+    @ManyToOne
+    @JoinColumn(name = "game_id")
     private GameDTO game_id;
-    @ManyToMany
-    @Column(name = "user_id")
-    private PlayerDTO user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Player user_id;
     @Column(name = "users_status")
     private boolean users_status;
 
-    public GameHasUser(int id, GameDTO game_id, PlayerDTO user_id, boolean users_status) {
+    public GameHasUser(int id, GameDTO game_id, Player user_id, boolean users_status) {
         this.id = id;
         this.game_id = game_id;
         this.user_id = user_id;
@@ -44,11 +45,11 @@ public class GameHasUser {
         this.game_id = game_id;
     }
 
-    public PlayerDTO getUser_id() {
+    public Player getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(PlayerDTO user_id) {
+    public void setUser_id(Player user_id) {
         this.user_id = user_id;
     }
 

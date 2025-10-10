@@ -2,8 +2,8 @@ package org.example.service;
 
 import org.example.dto.GameDTO;
 import org.example.dto.GameHasUser;
-import org.example.dto.PlayerDTO;
 import org.example.dto.RequestPayload;
+import org.example.entity.Player;
 import org.example.jpa.Queries;
 
 public class RoomService{
@@ -17,7 +17,7 @@ public class RoomService{
      */
     public boolean validateUser(String userName){
         Queries queries = new Queries();
-        PlayerDTO player = queries.findPlayerByUsername(userName);
+        Player player = queries.findPlayerByUsername(userName);
         return player != null;
     }
 
@@ -52,7 +52,7 @@ public class RoomService{
      */
     public String registerUserToGame(RequestPayload user, GameDTO game){
         Queries queries = new Queries();
-        PlayerDTO userFind = queries.findPlayerByUsername(user.username);
+        Player userFind = queries.findPlayerByUsername(user.username);
         if(userFind == null) return "User NOT match";
         GameHasUser gameHasUserSaved = queries.registerUserToGame(game, userFind);
         if(gameHasUserSaved == null) return "User NOT Registered to game " + game.getGame_id();
