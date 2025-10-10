@@ -2,7 +2,7 @@ package org.example.jpa;
 
 import java.util.List;
 
-import org.example.dto.PlayerDTO;
+import org.example.entity.Player;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -16,12 +16,12 @@ public class Queries {
      *
      * @param username (username) of the client
      */
-    public PlayerDTO findPlayerByUsername(String username){
+    public Player findPlayerByUsername(String username){
         EntityManager em = JpaUtil.getEntityManager();
         try {
-            Query query = em.createQuery("SELECT p FROM PlayerDTO p WHERE p.username = :username", PlayerDTO.class);
+            Query query = em.createQuery("SELECT p FROM PlayerDTO p WHERE p.username = :username", Player.class);
             query.setParameter("username", username);
-            return (PlayerDTO) query.getSingleResult();
+            return (Player) query.getSingleResult();
         }catch (NoResultException e){
             return null;
         }finally {

@@ -1,10 +1,10 @@
-package org.example.dto;
+package org.example.entity;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "game_user")
-public class PlayerDTO {
+public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
@@ -19,7 +19,7 @@ public class PlayerDTO {
     @Column(name = "user_match_win_quantity")
     private int userMatchWinCount;
 
-    public PlayerDTO(String username, String password, String passwordSalt){
+    public Player(String username, String password, String passwordSalt){
         this.username = username;
         this.password = password;
         this.passwordSalt = passwordSalt;
@@ -27,7 +27,7 @@ public class PlayerDTO {
         this.userMatchWinCount = 0;
     }
 
-    public PlayerDTO(){}
+    public Player(){}
 
     public int getUserId() {
         return userId;

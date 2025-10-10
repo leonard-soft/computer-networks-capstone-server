@@ -2,8 +2,8 @@ package org.example.service;
 
 import java.util.List;
 
-import org.example.dto.PlayerDTO;
 import org.example.dto.RequestPayload;
+import org.example.entity.Player;
 import org.example.hash.HashMethods;
 import org.example.jpa.JpaUtil;
 import org.example.jpa.Queries;
@@ -54,11 +54,10 @@ public class UserService {
         HashMethods hashMethods = new HashMethods();
         Queries  queries = new Queries();
 
-        PlayerDTO player = queries.findPlayerByUsername(requestPayload.username);
+        Player player = queries.findPlayerByUsername(requestPayload.username);
         if (player == null) return false;
         return hashMethods.compareHash(requestPayload.password, player.getPassword());
     }
-
 
     /**
      * This method update user state  
@@ -67,7 +66,7 @@ public class UserService {
     public void updateUserState(String username, boolean state){
         EntityManager em = JpaUtil.getEntityManager();
         try {
-            PlayerDTO player = em.find(PlayerDTO.class, username);
+            Player player = em.find(Player.class, username);
             if (player != null) {
                 player.setUserState(state);
                 em.getTransaction().begin();
