@@ -8,12 +8,23 @@ import java.util.Properties;
 
 public class HashMethods {
 
+    /**
+     * Variable that stores the pepper
+     */
     private final String pepper;
 
+    /**
+     * Constructor where a value is assigned to the variable pepper
+     */
     public HashMethods() {
         this.pepper = loadPepper();
     }
 
+    /**
+     * Function to hash the data passed in the parameters
+     * @param data to hash
+     * @return a String which is already the hash
+     */
     public String hash(String data) {
         Argon2 argon2 = Argon2Factory.create();
         char[] passwordChars = (data + pepper).toCharArray();
@@ -24,6 +35,12 @@ public class HashMethods {
         }
     }
 
+    /**
+     * Function that compares a hash with data in text format
+     * @param inputData plain text data
+     * @param storedHash hashed data that is stored in the database
+     * @return true if the data to be compared are equal or false if they are not equal
+     */
     public boolean compareHash(String inputData, String storedHash) {
         Argon2 argon2 = Argon2Factory.create();
         char[] passwordChars = (inputData + pepper).toCharArray();
@@ -34,6 +51,10 @@ public class HashMethods {
         }
     }
 
+    /**
+     *Function to load the contents of the hash.properties file
+     * @return the content found inside the hash.properties file
+     */
     private String loadPepper() {
         Properties proc = new Properties();
         try (InputStream input = HashMethods.class.getClassLoader().getResourceAsStream("hash.properties")) {
