@@ -5,10 +5,12 @@ import javax.management.Query;
 import org.example.dto.PlayerDTO;
 import org.example.dto.RequestPayload;
 import org.example.hash.HashMethods;
-import org.example.jpa.AuthQueries;
+import org.example.jpa.Queries;
 import org.example.jpa.JpaUtil;
 
 import jakarta.persistence.EntityManager;
+
+import java.util.List;
 
 public class UserService {
     
@@ -52,11 +54,43 @@ public class UserService {
      */
     public boolean loginUser(RequestPayload requestPayload){
         HashMethods hashMethods = new HashMethods();
-        AuthQueries  authQueries = new AuthQueries();
+        Queries queries = new Queries();
 
-        PlayerDTO player = authQueries.findPlayerByUsername(requestPayload.username);
+
+        PlayerDTO player = queries.findPlayerByUsername(requestPayload.username);
         if (player == null) return false;
 
         return hashMethods.compareHash(requestPayload.password, player.getPassword());
+    }
+
+
+    /**
+     * This method update user state
+     * @param username, boolean state
+     */
+
+    public void updateUserState(String username, boolean state){
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            PlayerDTO player = em.find(PlayerDTO.class, username);
+            if (player != null) {
+                player.setUserState(state);
+                em.getTransaction().begin();
+                em.merge(player);
+                em.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new RuntimeException("Error updating user state: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * This method returns all the online users on the DB
+     */
+    public List<String> getOnlineUsers(){
+        Queries queries = new Queries();
+        return queries.getOnlineUsers();
     }
 }
