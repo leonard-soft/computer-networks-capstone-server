@@ -13,6 +13,7 @@ import org.example.dto.LoginResponseDTO;
 import org.example.dto.RegisterResponseDTO;
 import org.example.dto.Request;
 import org.example.dto.RequestPayload;
+import org.example.service.RoomService;
 import org.example.service.UserService;
 
 import com.google.gson.Gson;
@@ -63,6 +64,7 @@ public class TcpService {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     Gson gson = new Gson();
                     UserService userService = new UserService();
+                    RoomService  roomService = new RoomService();
 
                     while (true) {
                         String line = reader.readLine();
@@ -138,6 +140,23 @@ public class TcpService {
                                     out.flush();
                                 }
                                 break;
+
+                            case "create_game":
+                                try {
+                                    if (username == null) throw new IllegalArgumentException("Must be logged in");
+                                    GameDTO game = roomService.createGameAndRegisterHost(username);
+                                    RegisterResponseDTO response = new RegisterResponseDTO(true, "Game created: " + game.getGame_id());
+                                    String jsonResponse = gson.toJson(response) + "\n";
+                                    out.write(jsonResponse.getBytes());
+                                    out.flush();
+                                } catch (Exception e) {
+                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
+                                    String jsonError = gson.toJson(errorResponse) + "\n";
+                                    out.write(jsonError.getBytes());
+                                    out.flush();
+                                }
+                                break;
+
                             default:
                                 System.out.println("Unknown request type: " + req.getType());
                         }
