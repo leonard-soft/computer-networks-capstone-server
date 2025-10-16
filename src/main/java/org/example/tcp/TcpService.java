@@ -1,5 +1,11 @@
 package org.example.tcp;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import org.example.dto.*;
+import org.example.service.RoomService;
+import org.example.service.UserService;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,26 +13,18 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
-
-import org.example.dto.*;
-import org.example.dto.LoginResponseDTO;
-import org.example.dto.RegisterResponseDTO;
-import org.example.dto.Request;
-import org.example.dto.RequestPayload;
-import org.example.service.RoomService;
-import org.example.service.UserService;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TcpService {
 
-    private int port;
+    private final int port;
+    private static final Map<String, OutputStream> connectedClients = new ConcurrentHashMap<>();
 
     /**
-     * A simple constructor to initialize the tcp 
+     * A simple constructor to initialize the tcp
      * service protocol.
-     * 
+     *
      * @param port integer value that represents port
      */
     public TcpService(int port) {
@@ -34,43 +32,61 @@ public class TcpService {
     }
 
     /**
+     * Sends a JSON-serialized message to a specific user if they are connected.
+     * Looks up the user's output stream from the connectedClients map and sends the payload.
+     * If the send fails, it assumes the client has disconnected and removes them from the map.
+     *
+     * @param username The username of the recipient.
+     * @param payload  The object to be sent as the message payload.
+     */
+    private void sendMessageToUser(String username, Object payload) {
+        OutputStream out = connectedClients.get(username);
+        if (out != null) {
+            try {
+                String jsonResponse = new Gson().toJson(payload) + "\n";
+                out.write(jsonResponse.getBytes());
+                out.flush();
+                System.out.println("Sent message to " + username + ": " + jsonResponse.trim());
+            } catch (IOException e) {
+                System.err.println("Failed to send message to " + username + ", removing from connected clients: " + e.getMessage());
+                connectedClients.remove(username);
+            }
+        } else {
+            System.out.println("Could not send message: User " + username + " not found among connected clients.");
+        }
+    }
+
+    /**
      * this function initialize the tcp service
      * and listen the commands from the client.
-     * 
+     *
      * @throws Exception for ServerSocket Mistakes
      */
     public void run() throws Exception {
-
-        /* this is from build a tcp socket */
         ServerSocket tcpSocket = new ServerSocket(this.port);
-
-        /* showing if the server is running */
         System.out.println("TCP socket: listening in port " + this.port);
 
-        /* This while loop is for the creation of new threads to handle new clients*/
         while (true) {
-
-            /* this is blocked waiting a client connection */
             Socket client = tcpSocket.accept();
-
             System.out.println("Client Connection:" + client.getInetAddress());
 
-            /* thread to attend a long quantity of request */
             new Thread(() -> {
                 String username = null;
-
+                OutputStream out = null;
                 try {
-                    OutputStream out = client.getOutputStream();
+                    out = client.getOutputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     Gson gson = new Gson();
                     UserService userService = new UserService();
-                    RoomService  roomService = new RoomService();
+                    RoomService roomService = new RoomService();
 
                     while (true) {
                         String line = reader.readLine();
-                        if (line == null) { // Disconnected client
+                        if (line == null) {
                             if (username != null) {
+                                System.out.println("Client " + username + " disconnected.");
                                 userService.updateUserState(username, false);
+                                connectedClients.remove(username);
                             }
                             break;
                         }
@@ -86,13 +102,11 @@ public class TcpService {
                                     String message = "register completed succesfully";
                                     RegisterResponseDTO register = new RegisterResponseDTO(true, message);
                                     String jsonResponse = gson.toJson(register) + "\n";
-                                    client.getOutputStream();
                                     out.write(jsonResponse.getBytes());
                                     out.flush();
                                 } catch (Exception e) {
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    client.getOutputStream();
                                     out.write(jsonError.getBytes());
                                     out.flush();
                                 }
@@ -110,6 +124,8 @@ public class TcpService {
                                         message = "Login successful";
                                         username = requestPayload.username;
                                         userService.updateUserState(username, true);
+                                        connectedClients.put(username, out);
+                                        System.out.println("User " + username + " logged in and added to connected clients.");
                                     } else {
                                         message = "Invalid credentials";
                                     }
@@ -123,7 +139,6 @@ public class TcpService {
                                     out.write(jsonError.getBytes());
                                     out.flush();
                                 }
-
                                 break;
                             case "get_online_users":
                                 try {
@@ -156,20 +171,83 @@ public class TcpService {
                                     out.flush();
                                 }
                                 break;
+                            /**
+                            * Handles a request from a client to invite another player to a game.
+                            * Expects an InvitationPayload with the gameId and the username of the player to be invited.
+                            * It registers the invitation in the database and sends a "GAME_INVITATION" notification
+                            * to the invited player if they are online.
+                            */
+                            case "SEND_INVITATION":
+                          try {
+                                 if (username == null) throw new IllegalStateException("User must be logged in to send invitations.");
+                                 InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()), InvitationPayload.class);
+                                 roomService.createInvitation(invPayload.getGameId(), invPayload.getInvitedUsername());
+                                 InvitationPayload notificationPayload = new InvitationPayload(username, invPayload.getInvitedUsername(), invPayload.getGameId());
+                                 sendMessageToUser(invPayload.getInvitedUsername(), new NotificationDTO("GAME_INVITATION", notificationPayload));
+                             } catch (Exception e) {
+                                 System.err.println("Error processing SEND_INVITATION: " + e.getMessage());
+                             }
+                             break;
+                            /**
+                             * Handles a request from a client to deny a game invitation.
+                             * Expects an InvitationPayload with the gameId and the original inviter's username.
+                             * It removes the pending invitation from the database and sends an "INVITATION_DENIED"
+                             * notification back to the original inviter.
+                             */
+                         case "DENY_INVITATION":
+                             try {
+                                 if (username == null) throw new IllegalStateException("User must be logged in to deny invitations.");
+                                 InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()), InvitationPayload.class);
+                                 roomService.respondToInvitation(invPayload.getGameId(), username, false);
+                                 Map<String, String> payload = Map.of("deniedBy", username, "gameId", String.valueOf(invPayload.getGameId()));
+                                 sendMessageToUser(invPayload.getInviterUsername(), new NotificationDTO("INVITATION_DENIED", payload));
+                             } catch (Exception e) {
+                                 System.err.println("Error processing DENY_INVITATION: " + e.getMessage());
+                             }
+                             break;
+                            /**
+                             *  Handles a request from a client to accept a game invitation.
+                             *  Expects an InvitationPayload with the gameId and the original inviter's username.
+                             *  It updates the player's status in the database to "accepted" and sends an
+                             *  "INVITATION_ACCEPTED" notification to both the inviter and the invitee.
+                            */
+                            case "ACCEPT_INVITATION":
+                                try {
+                                    if (username == null) throw new IllegalStateException("User must be logged in to accept invitations.");
+                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()), InvitationPayload.class);
+                                    String inviterUsername = invPayload.getInviterUsername();
+                                    int gameId = invPayload.getGameId();
 
+                                    roomService.respondToInvitation(gameId, username, true);
+
+                                    Map<String, String> payload = Map.of("acceptedBy", username, "gameId", String.valueOf(gameId));
+                                    NotificationDTO notification = new NotificationDTO("INVITATION_ACCEPTED", payload);
+
+                                    sendMessageToUser(inviterUsername, notification);
+                                    sendMessageToUser(username, notification);
+                                } catch (Exception e) {
+                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
+                                    String jsonError = gson.toJson(errorResponse) + "\n";
+                                    out.write(jsonError.getBytes());
+                                    out.flush();
+                                }
+                                break;
                             default:
                                 System.out.println("Unknown request type: " + req.getType());
                         }
                     }
                 } catch (IOException | JsonSyntaxException e) {
                     if (username != null) {
-                        UserService  userService = new UserService();
+                        System.err.println("Error handling client " + username + ": " + e.getMessage());
+                        UserService userService = new UserService();
                         userService.updateUserState(username, false);
+                        connectedClients.remove(username);
                     }
                 } finally {
                     try {
                         client.close();
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
