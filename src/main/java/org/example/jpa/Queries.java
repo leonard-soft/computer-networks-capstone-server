@@ -161,6 +161,48 @@ public class Queries {
         }
     }
 
+    public List<GameDTO> findActiveGames() {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            manageLogs.saveLog("INFO", "Fetching active games");
+            TypedQuery<GameDTO> query = em.createQuery(
+                    "SELECT g FROM GameDTO g WHERE g.game_status = true", GameDTO.class
+            );
+            List<GameDTO> games = query.getResultList();
+            manageLogs.saveLog("INFO", "Found " + games.size() + " active games");
+            return games;
+        } catch (Exception e) {
+            manageLogs.saveLog("ERROR", "Error fetching active games: " + e.getMessage());
+            throw new RuntimeException("Error fetching active games: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
+    public void updateGameStatus(int gameId, boolean status) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            GameDTO game = em.find(GameDTO.class, gameId);
+            if (game != null) {
+                game.setGame_status(status);
+                em.merge(game);
+                em.getTransaction().commit();
+                manageLogs.saveLog("INFO", "Game status updated for game " + gameId + " to " + status);
+            } else {
+                manageLogs.saveLog("WARN", "Game not found for status update: " + gameId);
+            }
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            manageLogs.saveLog("ERROR", "Error updating game status: " + e.getMessage());
+            throw new RuntimeException("Error updating game status: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
     public List<String> getOnlineUsers() {
         EntityManager em = JpaUtil.getEntityManager();
         try {
