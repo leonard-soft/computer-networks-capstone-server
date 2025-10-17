@@ -3,28 +3,29 @@ package org.example;
 import org.example.jpa.DatabaseTest;
 import org.example.logs.ManageLogs;
 import org.example.tcp.TcpService;
+import org.example.udp.UdpService;
 
 public class Main {
     public static void main(String[] args) {
         ManageLogs manageLogs = new ManageLogs();
-        // DatabaseTest databaseTest = new DatabaseTest();
-        //databaseTest.databaseTest();
 
-        TcpService tcpService = new TcpService(5000);
+        try {
+            // Start TCP Service in a new thread
+            TcpService tcpService = new TcpService(5000);
+            new Thread(() -> {
+                try {
+                    tcpService.run();
+                } catch (Exception e) {
+                    manageLogs.saveLog("ERROR", "TCP service error: " + e.getMessage());
+                }
+            }).start();
 
-        /**
-         * This is the tcp service thread
-         * with this we can receive messages
-         * and send responses.
-         */
-        new Thread(() -> {
-            try {
-                manageLogs.saveLog("INFO", "TCP service started");
-                tcpService.run();
-            }catch (Exception e) {
-                manageLogs.saveLog("ERROR", "TCP service error: " + e.getMessage());
-            }
-        }).start();
+            // Start UDP Service in a new thread
+            UdpService udpService = new UdpService();
+            new Thread(udpService::listen).start();
 
+        } catch (Exception e) {
+            manageLogs.saveLog("FATAL", "Failed to start services: " + e.getMessage());
+        }
     }
 }

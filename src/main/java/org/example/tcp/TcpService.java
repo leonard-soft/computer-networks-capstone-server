@@ -7,6 +7,9 @@ import org.example.logs.ManageLogs;
 import org.example.service.RoomService;
 import org.example.service.UserService;
 
+import org.example.entity.Player;
+import org.example.jpa.Queries;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,6 +24,7 @@ public class TcpService {
 
     private final int port;
     private static final Map<String, OutputStream> connectedClients = new ConcurrentHashMap<>();
+    public static final Map<Integer, GameSession> activeGameSessions = new ConcurrentHashMap<>();
     private final ManageLogs manageLogs = new ManageLogs();
 
     /**
@@ -216,6 +220,19 @@ public class TcpService {
 
                                     roomService.respondToInvitation(gameId, username, true);
                                     roomService.startGame(gameId);
+
+                                    // Create and store the game session for the UDP service
+                                    Queries queries = new Queries();
+                                    Player inviter = queries.findPlayerByUsername(inviterUsername);
+                                    Player invitee = queries.findPlayerByUsername(username);
+
+                                    if (inviter != null && invitee != null) {
+                                        GameSession session = new GameSession(gameId, inviter.getUserId(), invitee.getUserId());
+                                        activeGameSessions.put(gameId, session);
+                                        manageLogs.saveLog("INFO", "Game session created for game ID: " + gameId);
+                                    } else {
+                                        manageLogs.saveLog("ERROR", "Could not create game session for game ID: " + gameId + ". One or more players not found.");
+                                    }
 
                                     Map<String, String> payload = Map.of("acceptedBy", username, "gameId", String.valueOf(gameId));
                                     NotificationDTO notification = new NotificationDTO("INVITATION_ACCEPTED", payload);
