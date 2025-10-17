@@ -1,21 +1,18 @@
 package org.example.dto;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class DataTransferDTO implements Serializable {
 
     private int IdPlayer;
-    private double positionX;
-    private double positionY;
-    private String state;
-    private String dir;
+    private String eventType; // e.g., "PLAYER_MOVE", "PLAYER_ATTACK"
+    private Map<String, Object> payload;
 
-    public DataTransferDTO(int IdPlayer, double positionX, double positionY, String state, String dir) {
-        this.IdPlayer = IdPlayer;
-        this.positionX = positionX;
-        this.positionY = positionY;
-        this.state = state;
-        this.dir = dir;
+    public DataTransferDTO(int idPlayer, String eventType, Map<String, Object> payload) {
+        this.IdPlayer = idPlayer;
+        this.eventType = eventType;
+        this.payload = payload;
     }
 
     public DataTransferDTO() {
@@ -29,35 +26,19 @@ public class DataTransferDTO implements Serializable {
         IdPlayer = idPlayer;
     }
 
-    public double getPositionX() {
-        return positionX;
+    public String getEventType() {
+        return eventType;
     }
 
-    public void setPositionX(double positionX) {
-        this.positionX = positionX;
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
     }
 
-    public double getPositionY() {
-        return positionY;
+    public Map<String, Object> getPayload() {
+        return payload;
     }
 
-    public void setPositionY(double positionY) {
-        this.positionY = positionY;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getDir() {
-        return dir;
-    }
-
-    public void setDir(String dir) {
-        this.dir = dir;
+    public void setPayload(Map<String, Object> payload) {
+        this.payload = payload;
     }
 }
