@@ -174,6 +174,17 @@ public class TcpService {
                                     out.flush();
                                 }
                                 break;
+                            case "get_active_games":
+                                try {
+                                    List<GameDTO> activeGames = roomService.getActiveGames();
+                                    String jsonResponse = gson.toJson(activeGames) + "\n";
+                                    out.write(jsonResponse.getBytes());
+                                    out.flush();
+                                } catch (Exception e) {
+                                    manageLogs.saveLog("ERROR", "Error getting active games: " + e.getMessage());
+                                    // Optionally send an error response back to the client
+                                }
+                                break;
                             case "SEND_INVITATION":
                                 try {
                                     if (username == null) throw new IllegalStateException("User must be logged in to send invitations.");
@@ -204,6 +215,7 @@ public class TcpService {
                                     int gameId = invPayload.getGameId();
 
                                     roomService.respondToInvitation(gameId, username, true);
+                                    roomService.startGame(gameId);
 
                                     Map<String, String> payload = Map.of("acceptedBy", username, "gameId", String.valueOf(gameId));
                                     NotificationDTO notification = new NotificationDTO("INVITATION_ACCEPTED", payload);

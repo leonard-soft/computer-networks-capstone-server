@@ -6,6 +6,8 @@ import org.example.entity.Player;
 import org.example.jpa.Queries;
 import org.example.logs.ManageLogs;
 
+import java.util.List;
+
 public class RoomService {
     private final ManageLogs manageLogs = new ManageLogs();
 
@@ -26,6 +28,12 @@ public class RoomService {
         queries.registerUserToGame(game, host, true);
         manageLogs.saveLog("INFO", "Game created by host " + hostUsername + " with ID: " + game.getGame_id());
         return game;
+    }
+
+    public List<GameDTO> getActiveGames() {
+        Queries queries = new Queries();
+        manageLogs.saveLog("INFO", "Requesting active games list.");
+        return queries.findActiveGames();
     }
 
     /**
@@ -53,6 +61,12 @@ public class RoomService {
         }
         manageLogs.saveLog("INFO", "Invitation sent to " + inviteeUsername + " for game " + gameId);
         return "Invitation sent successfully";
+    }
+
+    public void startGame(int gameId) {
+        Queries queries = new Queries();
+        queries.updateGameStatus(gameId, true);
+        manageLogs.saveLog("INFO", "Game " + gameId + " has been started.");
     }
 
     /**
