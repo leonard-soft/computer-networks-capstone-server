@@ -5,7 +5,7 @@ import org.example.logs.ManageLogs;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class encryptData {
@@ -33,7 +33,7 @@ public class encryptData {
     public String encrypt(String data) {
         try {
             Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
-            byte[] encrypted = cipher.doFinal(data.getBytes("UTF-8"));
+            byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(encrypted);
         } catch (Exception e) {
             logs.saveLog("ERROR", "AES encrypt error: " + e.getMessage());
@@ -45,7 +45,7 @@ public class encryptData {
         try {
             Cipher cipher = initCipher(Cipher.DECRYPT_MODE);
             byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(encryptedBase64));
-            return new String(decrypted, "UTF-8");
+            return new String(decrypted, StandardCharsets.UTF_8);
         } catch (Exception e) {
             logs.saveLog("ERROR", "AES decrypt error: " + e.getMessage());
             return null;

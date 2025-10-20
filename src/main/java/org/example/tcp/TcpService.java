@@ -19,8 +19,6 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.PublicKey;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,7 +33,7 @@ public class TcpService {
     public static final Map<Integer, GameSession> activeGameSessions = new ConcurrentHashMap<>();
     private final ManageLogs manageLogs = new ManageLogs();
     private final GenerateAES generateAES = new GenerateAES();
-    ;
+
 
     /**
      * A simple constructor to initialize the tcp
