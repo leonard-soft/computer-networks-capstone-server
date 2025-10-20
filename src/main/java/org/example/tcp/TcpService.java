@@ -137,16 +137,15 @@ public class TcpService {
                         RegisterRequest req = gson.fromJson(decryptedLine, RegisterRequest.class);
                         manageLogs.saveLog("INFO", "Request received: " + req.getType() + " from " + (username != null ? username : "unknown user"));
                         switch (req.getType()) {
+
+                            /**
+                             * @Register Case
+                             * 
+                             * use the mail service to send the random
+                             * code for the user.
+                             */
                             case "register":
                                 RegisterRequestPayload requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RegisterRequestPayload.class);
-                                
-                                //RequestPayload requestPayloads = new RequestPayload();
-                                //requestPayloads.username = requestPayload.username;
-                                //requestPayloads.password = requestPayload.password;
-                                //userService.registerUser(requestPayloads);
-
-                                //System.out.println(requestPayload.email + " " + requestPayload.username);
-
                                 try {
                                     mailService.generateAndSend(requestPayload.email, 300, requestPayload);
                                     String message = "register completed succesfully";
@@ -159,6 +158,14 @@ public class TcpService {
                                     sendEncryptedData(out, jsonError);
                                 }
                                 break;
+
+
+                            /**
+                             * @Login Case
+                             * 
+                             * get the username and password from the user to
+                             * do login.
+                             */
                             case "login":
                                 try {
                                     String message;
@@ -189,6 +196,8 @@ public class TcpService {
                                     sendEncryptedData(out, jsonError);
                                 }
                                 break;
+
+
                             case "get_online_users":
                                 try {
                                     List<String> onlineUsers = userService.getOnlineUsers();
