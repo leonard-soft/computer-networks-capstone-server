@@ -82,7 +82,9 @@ public class TcpService {
         ServerSocket tcpSocket = new ServerSocket(this.port);
         manageLogs.saveLog("INFO", "TCP socket: listening in port " + this.port);
         generateAES.createKeysRandom();
+
         while (true) {
+            System.out.println("INFO, Waiting a client");
             Socket client = tcpSocket.accept();
             manageLogs.saveLog("INFO", "Client connected: " + client.getInetAddress());
             String key = generateAES.getKey();
@@ -97,6 +99,8 @@ public class TcpService {
             manageLogs.saveLog("INFO", "Sent server public key to client: " + client.getInetAddress());
 
 
+            System.out.println("fuera del hilo");
+
             new Thread(() -> {
                 String username = null;
                 OutputStream out = null;
@@ -108,8 +112,8 @@ public class TcpService {
                     RoomService roomService = new RoomService();
 
                     while (true) {
-                        String line = reader.readLine();
-                        if (line == null) {
+                        String encryptedLine = reader.readLine();
+                        if (encryptedLine == null) {
                             if (username != null) {
                                 manageLogs.saveLog("INFO", "Client " + username + " disconnected.");
                                 // userService.updateUserState(username, "offline");
@@ -124,7 +128,13 @@ public class TcpService {
                             break;
                         }
 
-                        Request req = gson.fromJson(line, Request.class);
+                        String decryptedLine = aes.decrypt(encryptedLine);
+                        if (decryptedLine == null) {
+                            manageLogs.saveLog("WARN", "Failed to decrypt message from client " + (username != null ? username : "unknown user") + ". Skipping request.");
+                            continue;
+                        }
+
+                        Request req = gson.fromJson(decryptedLine, Request.class);
                         manageLogs.saveLog("INFO", "Request received: " + req.getType() + " from " + (username != null ? username : "unknown user"));
                         switch (req.getType()) {
                             case "register":
@@ -318,4 +328,3 @@ public class TcpService {
     }
 
 }
-
