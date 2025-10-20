@@ -124,4 +124,31 @@ public class UserService {
         Queries queries = new Queries();
         return queries.getOnlineUsers();
     }
+
+    /**
+     * this method is to obtein the player using the 
+     * username.
+     * 
+     * @param username string value
+     * @return player Entity
+     */
+    public Player getByUsername(String username) {
+        EntityManager em = JpaUtil.getEntityManager();
+    
+        try {
+            List<Player> result = em.createQuery(
+                    "SELECT p FROM Player p WHERE p.username = :username", Player.class)
+                    .setParameter("username", username)
+                    .getResultList();
+    
+            return result.isEmpty() ? null : result.get(0);
+    
+        } catch (Exception e) {
+            manageLogs.saveLog("ERROR", "Error searching the player " + username + ": " + e.getMessage());
+            throw new RuntimeException("Error searching player: " + e.getMessage());
+        } finally {
+            em.close(); 
+        }
+    }
+    
 }

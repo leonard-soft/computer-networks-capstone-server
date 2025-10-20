@@ -1,10 +1,10 @@
+```java
+
 package org.example.tcp;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.example.dto.*;
-import org.example.encrypt.GenerateAES;
-import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
 import org.example.service.RoomService;
 import org.example.service.UserService;
@@ -34,6 +34,12 @@ public class TcpService {
     private final ManageLogs manageLogs = new ManageLogs();
     private final GenerateAES generateAES = new GenerateAES();
 
+<<<<<<< HEAD
+    private final GenerateAES generateAES = new GenerateAES();;
+=======
+    private static final Map<InetAddress, Keys> publicKeysUser = new ConcurrentHashMap<>();
+    private final GenerateRSAKeys generateRSAKeys = new GenerateRSAKeys();
+>>>>>>> 61d04e1 (feat: player and queries)
 
     /**
      * A simple constructor to initialize the tcp
@@ -133,9 +139,16 @@ public class TcpService {
                                 try {
                                     String message = "register completed succesfully";
                                     RegisterResponseDTO register = new RegisterResponseDTO(true, message);
-                                    String jsonResponse = gson.toJson(register) + "\n";
-                                    out.write(jsonResponse.getBytes());
-                                    out.flush();
+                                    String jsonResponse = gson.toJson(register);
+
+                                    Keys clientKey = publicKeysUser.get(client.getInetAddress());
+                                    String encrypted = generateRSAKeys.encryptData(
+                                        jsonResponse, 
+                                        generateRSAKeys.convertPublicKeyClient(clientKey.getPublicUserKey())
+                                    );
+
+                                    out.write((encrypted + "\n").getBytes());
+                                    out.flush();  
                                 } catch (Exception e) {
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
@@ -161,12 +174,29 @@ public class TcpService {
                                     } else {
                                         message = "Invalid credentials";
                                     }
+<<<<<<< HEAD
                                     LoginResponseDTO response = new LoginResponseDTO(success, message);
                                     String jsonResponse = gson.toJson(response) + "\n";
                                     sendEncryptedData(client.getInetAddress(), jsonResponse);
                                 } catch (JsonSyntaxException | IllegalArgumentException e) {
+=======
+
+                                    Player player = userService.getByUsername(username);
+                                    LoginResponseDTO response = new LoginResponseDTO(success, message, player.getUserId());
+                                    String jsonResponse = gson.toJson(response);
+
+                                    Keys clientKey = publicKeysUser.get(client.getInetAddress());
+                                    String encrypted = generateRSAKeys.encryptData(
+                                        jsonResponse, 
+                                        generateRSAKeys.convertPublicKeyClient(clientKey.getPublicUserKey())
+                                    );
+
+                                    out.write((encrypted + "\n").getBytes());
+                                    out.flush();
+                                } catch (Exception e) {
+>>>>>>> 61d04e1 (feat: player and queries)
                                     manageLogs.saveLog("ERROR", "Login error: " + e.getMessage());
-                                    LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage());
+                                    LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage(), 0);
                                     String jsonError = gson.toJson(errorResponse) + "\n";
                                     sendEncryptedData(client.getInetAddress(), jsonError);
                                 }
@@ -189,6 +219,10 @@ public class TcpService {
                                 try {
                                     if (username == null) throw new IllegalArgumentException("Must be logged in");
                                     GameDTO game = roomService.createGameAndRegisterHost(username);
+<<<<<<< HEAD
+=======
+                                   
+>>>>>>> 61d04e1 (feat: player and queries)
                                     RegisterResponseDTO response = new RegisterResponseDTO(true, "Game created: " + game.getGame_id());
                                     String jsonResponse = gson.toJson(response) + "\n";
                                     sendEncryptedData(client.getInetAddress(), jsonResponse);
@@ -301,6 +335,7 @@ public class TcpService {
     }
 
 
+<<<<<<< HEAD
     public void sendEncryptedData(InetAddress client, String data) {
         try {
             OutputStream out = connectedClients.get(client);
@@ -317,4 +352,8 @@ public class TcpService {
         }
     }
 
+=======
+>>>>>>> 61d04e1 (feat: player and queries)
 }
+
+```
