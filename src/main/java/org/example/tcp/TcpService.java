@@ -3,6 +3,8 @@ package org.example.tcp;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.example.dto.*;
+import org.example.dto.register.RegisterRequest;
+import org.example.dto.register.RegisterRequestPayload;
 import org.example.encrypt.GenerateAES;
 import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
@@ -131,38 +133,42 @@ public class TcpService {
                             continue;
                         }
 
-                        Request req = gson.fromJson(decryptedLine, Request.class);
+                        RegisterRequest req = gson.fromJson(decryptedLine, RegisterRequest.class);
                         manageLogs.saveLog("INFO", "Request received: " + req.getType() + " from " + (username != null ? username : "unknown user"));
                         switch (req.getType()) {
                             case "register":
-                                RequestPayload requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
-                                userService.registerUser(requestPayload);
+                                RegisterRequestPayload requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RegisterRequestPayload.class);
+                                RequestPayload requestPayloads = new RequestPayload();
+                                requestPayloads.username = requestPayload.username;
+                                requestPayloads.password = requestPayload.password;
+
+                                userService.registerUser(requestPayloads);
+
+                                System.out.println(requestPayload.email + " " + requestPayload.username);
 
                                 try {
                                     String message = "register completed succesfully";
                                     RegisterResponseDTO register = new RegisterResponseDTO(true, message);
                                     String jsonResponse = gson.toJson(register) + "\n";
-                                    out.write(jsonResponse.getBytes());
-                                    out.flush();
+                                    sendEncryptedData(out, jsonResponse);
                                 } catch (Exception e) {
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    out.write(jsonError.getBytes());
-                                    out.flush();
+                                    sendEncryptedData(out, jsonError);
                                 }
                                 break;
                             case "login":
                                 try {
                                     String message;
                                     System.out.println("REQUEST TYPE: LOGIN");
-                                    requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
-                                    if (requestPayload == null || requestPayload.username == null) {
+                                    RequestPayload loginRequestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    if (loginRequestPayload == null || loginRequestPayload.username == null) {
                                         throw new IllegalArgumentException("Invalid payload: Username is missing");
                                     }
-                                    boolean success = userService.loginUser(requestPayload);
+                                    boolean success = userService.loginUser(loginRequestPayload);
                                     if (success) {
                                         message = "Login successful";
-                                        username = requestPayload.username;
+                                        username = loginRequestPayload.username;
                                         userService.updateUserState(username, "online");
                                         connectedClients.put(username, out);
                                         manageLogs.saveLog("INFO", "User " + username + " logged in and added to connected clients.");
