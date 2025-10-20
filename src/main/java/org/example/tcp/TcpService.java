@@ -26,9 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.example.udp.UdpService;
+
 public class TcpService {
 
     private final int port;
+    private final UdpService udpService;
     private static final Map<String, OutputStream> connectedClients = new ConcurrentHashMap<>();
     public static final Map<Integer, GameSession> activeGameSessions = new ConcurrentHashMap<>();
     private final ManageLogs manageLogs = new ManageLogs();
@@ -42,8 +45,9 @@ public class TcpService {
      *
      * @param port integer value that represents port
      */
-    public TcpService(int port) {
+    public TcpService(int port, UdpService udpService) {
         this.port = port;
+        this.udpService = udpService;
     }
 
     /**
@@ -122,6 +126,12 @@ public class TcpService {
                                 manageLogs.saveLog("INFO", "Client " + username + " disconnected.");
                                 userService.updateUserState(username, false);
                                 connectedClients.remove(username);
+
+                                // Notify UdpService to remove the player
+                                Player player = new Queries().findPlayerByUsername(username);
+                                if (player != null) {
+                                    udpService.removePlayer(player.getUserId());
+                                }
                             }
                             break;
                         }
@@ -290,6 +300,12 @@ public class TcpService {
                         UserService userService = new UserService();
                         userService.updateUserState(username, false);
                         connectedClients.remove(username);
+
+                        // Notify UdpService to remove the player
+                        Player player = new Queries().findPlayerByUsername(username);
+                        if (player != null) {
+                            udpService.removePlayer(player.getUserId());
+                        }
                     }
                 } finally {
                     try {

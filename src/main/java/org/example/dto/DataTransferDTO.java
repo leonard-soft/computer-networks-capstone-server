@@ -3,7 +3,7 @@ package org.example.dto;
 import java.io.Serializable;
 import java.util.Map;
 
-public class DataTransferDTO implements Serializable {
+public class DataTransferDTO {
 
     private int IdPlayer;
     private String eventType; // e.g., "PLAYER_MOVE", "PLAYER_ATTACK"

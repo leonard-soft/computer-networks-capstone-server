@@ -13,17 +13,21 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UdpService {
 
     private final DatagramSocket socket;
     private final ManageLogs manageLogs;
-    private final Map<Integer, PlayerConnection> connections = new HashMap<>();
+    private final ConcurrentHashMap<Integer, PlayerConnection> connections = new ConcurrentHashMap<>();
     private final GenerateAES aes;
     private final RoomService roomService;
     private final GenerateRSAKeys generateRSAKeys;
+    private final encryptData aesEncryptor;
+    private final Gson gson = new Gson();
     private boolean running;
 
     public UdpService() throws SocketException {
@@ -32,6 +36,7 @@ public class UdpService {
         this.aes = new GenerateAES();
         this.roomService = new RoomService();
         this.generateRSAKeys= new GenerateRSAKeys();
+        this.aesEncryptor = new encryptData(this.roomService, this.manageLogs);
     }
 
     public void listen() {
@@ -44,11 +49,23 @@ public class UdpService {
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet); // Blocks until a packet is received
 
-                // Deserialize the packet data back to a DataTransferDTO
-                DataTransferDTO data = bytesToObject(packet.getData());
-                if (data != null) {
-                    // Process the received data
-                    processPacket(data);
+                // Decrypt and deserialize the packet data from JSON
+                String encryptedString = new String(packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8);
+                String json = aesEncryptor.decrypt(encryptedString, packet.getAddress());
+
+                if (json != null) {
+                    DataTransferDTO data = gson.fromJson(json, DataTransferDTO.class);
+
+                    if (data != null) {
+                        if (!connections.containsKey(data.getIdPlayer())) {
+                            PlayerConnection playerConn = new PlayerConnection(data.getIdPlayer(), packet.getAddress(), packet.getPort());
+                            savePlayer(playerConn);
+                        }
+                        // Process the received data
+                        processPacket(data);
+                    }
+                } else {
+                    manageLogs.saveLog("WARN", "Failed to decrypt UDP packet from " + packet.getAddress());
                 }
             } catch (IOException e) {
                 if (running) {
@@ -58,15 +75,6 @@ public class UdpService {
         }
     }
 
-    private DataTransferDTO bytesToObject(byte[] bytes) {
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-             ObjectInputStream ois = new ObjectInputStream(bis)) {
-            return (DataTransferDTO) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            manageLogs.saveLog("ERROR", "Error deserializing UDP packet: " + e.getMessage());
-            return null;
-        }
-    }
 
     private GameSession findGameSessionByPlayerId(int playerId) {
         for (GameSession session : TcpService.activeGameSessions.values()) {
@@ -126,9 +134,6 @@ public class UdpService {
         }
 
         try {
-            Gson gson = new Gson();
-            encryptData aesEncryptor = new encryptData();
-
             //  Obtener las llaves
             Keys keyPublic = TcpService.getKey(player.getIp());
             KeysAES aesKeys = roomService.findKeys(player.getIp());
@@ -163,7 +168,7 @@ public class UdpService {
             String json = gson.toJson(data);
             String encryptedData = aesEncryptor.encrypt(json, player.getIp());
 
-            byte[] dataBuffer = encryptedData.getBytes();
+            byte[] dataBuffer = encryptedData.getBytes(StandardCharsets.UTF_8);
             DatagramPacket dataPacket = new DatagramPacket(
                     dataBuffer,
                     dataBuffer.length,
@@ -186,16 +191,6 @@ public class UdpService {
         sendPacket(data, session.getPlayer2Id());
     }
 
-    private byte[] objectToBytes(Object object) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
-            objectOutputStream.writeObject(object);
-            return outputStream.toByteArray();
-        } catch (IOException e) {
-            manageLogs.saveLog("ERROR", "Error serializing object: " + e.getMessage());
-            return new byte[0];
-        }
-    }
 
     public void savePlayer(PlayerConnection playerConnection) {
         if (playerConnection == null) {
@@ -204,6 +199,14 @@ public class UdpService {
         }
         connections.put(playerConnection.getPlayerId(), playerConnection);
         manageLogs.saveLog("INFO", "Player UDP connection details saved for ID: " + playerConnection.getPlayerId());
+    }
+
+    public void removePlayer(int playerId) {
+        if (connections.remove(playerId) != null) {
+            manageLogs.saveLog("INFO", "Player UDP connection details removed for ID: " + playerId);
+        } else {
+            manageLogs.saveLog("WARN", "Attempted to remove non-existent UDP connection for player ID: " + playerId);
+        }
     }
 
     public void close() {
