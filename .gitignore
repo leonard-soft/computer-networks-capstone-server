@@ -43,7 +43,10 @@ build/
 
 .env
 src/main/resources/hash.properties
+fighterStickMan.log
 
 ### KEY STORE FILE ###
 
+server_iv_aes.key 
+server_key_aes.key 
 serverkeystore.jks
