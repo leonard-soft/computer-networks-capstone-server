@@ -6,7 +6,6 @@ import org.example.dto.*;
 import org.example.encrypt.GenerateAES;
 import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
-import org.example.rsa.GenerateRSAKeys;
 import org.example.service.RoomService;
 import org.example.service.UserService;
 
@@ -35,9 +34,7 @@ public class TcpService {
     private static final Map<String, OutputStream> connectedClients = new ConcurrentHashMap<>();
     public static final Map<Integer, GameSession> activeGameSessions = new ConcurrentHashMap<>();
     private final ManageLogs manageLogs = new ManageLogs();
-    private final GenerateAES generateAES = new GenerateAES();
-    private static final Map<InetAddress, Keys> publicKeysUser = new ConcurrentHashMap<>();
-    private final GenerateRSAKeys generateRSAKeys = new GenerateRSAKeys();
+    private final GenerateAES generateAES = new GenerateAES();;
 
     /**
      * A simple constructor to initialize the tcp
@@ -84,25 +81,16 @@ public class TcpService {
     public void run() throws Exception {
         ServerSocket tcpSocket = new ServerSocket(this.port);
         manageLogs.saveLog("INFO", "TCP socket: listening in port " + this.port);
-        generateRSAKeys.initializeKeys();
+        generateAES.createKeysRandom();
         while (true) {
             Socket client = tcpSocket.accept();
             manageLogs.saveLog("INFO", "Client connected: " + client.getInetAddress());
+            String key = generateAES.getKey();
+            String iv = generateAES.getIv();
+            String dataSend = key + ":" + iv;
 
-            // Read the public key sent by the client
-            BufferedReader readerClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            String clientPublicKeyBase64 = readerClient.readLine(); // llave pública del cliente en Base64
-
-            // Prepare the server's public key
-            String serverPublicKeyBase64  = Base64.getEncoder().encodeToString(generateRSAKeys.getPublicKey().getEncoded());
-
-            // Save keys in the Map
-            Keys clientKeys = new Keys(client.getInetAddress(), serverPublicKeyBase64, clientPublicKeyBase64);
-            publicKeysUser.put(client.getInetAddress(), clientKeys);
-
-            // Send the server's public key to the client
             OutputStream outKey = client.getOutputStream();
-            String jsonResponseKey = new Gson().toJson(new Keys(null, serverPublicKeyBase64, null)) + "\n";
+            String jsonResponseKey = new Gson().toJson(dataSend) + "\n";
             outKey.write(jsonResponseKey.getBytes());
             outKey.flush();
 
@@ -176,14 +164,12 @@ public class TcpService {
                                     }
                                     LoginResponseDTO response = new LoginResponseDTO(success, message);
                                     String jsonResponse = gson.toJson(response) + "\n";
-                                    out.write(jsonResponse.getBytes());
-                                    out.flush();
-                                } catch (IOException | JsonSyntaxException | IllegalArgumentException e) {
+                                    sendEncryptedData(client.getInetAddress(), jsonResponse);
+                                } catch (JsonSyntaxException | IllegalArgumentException e) {
                                     manageLogs.saveLog("ERROR", "Login error: " + e.getMessage());
                                     LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    out.write(jsonError.getBytes());
-                                    out.flush();
+                                    sendEncryptedData(client.getInetAddress(), jsonError);
                                 }
                                 break;
                             case "get_online_users":
@@ -191,14 +177,12 @@ public class TcpService {
                                     List<String> onlineUsers = userService.getOnlineUsers();
                                     ConnectedUsersResponseDTO response = new ConnectedUsersResponseDTO(onlineUsers.toArray(new String[0]));
                                     String jsonResponse = gson.toJson(response) + "\n";
-                                    out.write(jsonResponse.getBytes());
-                                    out.flush();
-                                } catch (IOException | RuntimeException e) {
+                                    sendEncryptedData(client.getInetAddress(), jsonResponse);
+                                } catch (RuntimeException e) {
                                     manageLogs.saveLog("ERROR", "Error getting online users: " + e.getMessage());
                                     ConnectedUsersResponseDTO errorResponse = new ConnectedUsersResponseDTO(new String[0]);
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    out.write(jsonError.getBytes());
-                                    out.flush();
+                                    sendEncryptedData(client.getInetAddress(), jsonError);
                                 }
                                 break;
 
@@ -206,31 +190,26 @@ public class TcpService {
                                 try {
                                     if (username == null) throw new IllegalArgumentException("Must be logged in");
                                     GameDTO game = roomService.createGameAndRegisterHost(username);
-                                    generateAES.createKeysRandom();
-                                    roomService.saveClientKeysAES(client.getInetAddress(),
-                                            Base64.getDecoder().decode(generateAES.getKey32()),
-                                            Base64.getDecoder().decode(generateAES.getKey16()));
                                     RegisterResponseDTO response = new RegisterResponseDTO(true, "Game created: " + game.getGame_id());
                                     String jsonResponse = gson.toJson(response) + "\n";
-                                    out.write(jsonResponse.getBytes());
-                                    out.flush();
+                                    sendEncryptedData(client.getInetAddress(), jsonResponse);
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error creating game: " + e.getMessage());
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    out.write(jsonError.getBytes());
-                                    out.flush();
+                                    sendEncryptedData(client.getInetAddress(), jsonError);
                                 }
                                 break;
                             case "get_active_games":
                                 try {
                                     List<GameDTO> activeGames = roomService.getActiveGames();
                                     String jsonResponse = gson.toJson(activeGames) + "\n";
-                                    out.write(jsonResponse.getBytes());
-                                    out.flush();
+                                    sendEncryptedData(client.getInetAddress(), jsonResponse);
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error getting active games: " + e.getMessage());
-                                    // Optionally send an error response back to the client
+                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
+                                    String jsonError = gson.toJson(errorResponse) + "\n";
+                                    sendEncryptedData(client.getInetAddress(), jsonError);
                                 }
                                 break;
                             case "SEND_INVITATION":
@@ -319,38 +298,13 @@ public class TcpService {
         }
     }
 
-    public static Keys getKey(InetAddress ip){
-        return publicKeysUser.get(ip);
-    }
 
-    public void sendEncryptedData(InetAddress client, String data, RoomService roomService) {
+    public void sendEncryptedData(InetAddress client, String data) {
         try {
-            KeysAES aesKeys = roomService.findKeys(client);
-            if (aesKeys == null) {
-                manageLogs.saveLog("ERROR", "No AES keys found for client " + client);
-                return;
-            }
-
-            Keys publicKeyClient = publicKeysUser.get(client);
-            if (publicKeyClient == null) {
-                manageLogs.saveLog("ERROR", "No RSA public key found for client " + client);
-                return;
-            }
-
-            String combinedAES = aesKeys.getKey() + ":" + aesKeys.getIv();
-            String encryptedAES = generateRSAKeys.encryptData(
-                    combinedAES,
-                    generateRSAKeys.convertPublicKeyClient(publicKeyClient.getPublicUserKey())
-            );
-
             OutputStream out = connectedClients.get(client);
             if (out != null) {
-                out.write((encryptedAES + "\n").getBytes());
-                out.flush();
-                manageLogs.saveLog("INFO", "AES key sent to client: " + client);
-
                 encryptData aes = new encryptData();
-                String encryptedData = aes.encrypt(data, client);
+                String encryptedData = aes.encrypt(data);
                 out.write((encryptedData + "\n").getBytes());
                 out.flush();
                 manageLogs.saveLog("INFO", "Data sent to client: " + client);

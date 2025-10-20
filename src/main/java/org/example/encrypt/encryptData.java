@@ -1,8 +1,6 @@
 package org.example.encrypt;
 
 import org.example.logs.ManageLogs;
-import org.example.service.RoomService;
-import org.example.dto.KeysAES;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -12,22 +10,18 @@ import java.util.Base64;
 
 public class encryptData {
 
-    private ManageLogs logs;
-    private RoomService service;
-
-    public encryptData(RoomService service, ManageLogs logs) {
-        this.service = service;
-        this.logs = logs;
-    }
+    private final ManageLogs logs;
+    private final GenerateAES generateAES;
 
     public encryptData() {
-
+        this.logs = new ManageLogs();
+        this.generateAES = new GenerateAES();
     }
 
-    private Cipher initCipher(int mode, InetAddress infoClient) throws Exception {
-        KeysAES keys = service.findKeys(infoClient);
-        byte[] keyBytes = Base64.getDecoder().decode(keys.getKey());
-        byte[] ivBytes = Base64.getDecoder().decode(keys.getIv());
+
+    private Cipher initCipher(int mode) throws Exception {
+        byte[] keyBytes = Base64.getDecoder().decode(generateAES.getKey());
+        byte[] ivBytes = Base64.getDecoder().decode(generateAES.getIv());
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 
@@ -36,9 +30,9 @@ public class encryptData {
         return cipher;
     }
 
-    public String encrypt(String data, InetAddress infoClient) {
+    public String encrypt(String data) {
         try {
-            Cipher cipher = initCipher(Cipher.ENCRYPT_MODE, infoClient);
+            Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
             byte[] encrypted = cipher.doFinal(data.getBytes("UTF-8"));
             return Base64.getEncoder().encodeToString(encrypted);
         } catch (Exception e) {
@@ -47,9 +41,9 @@ public class encryptData {
         }
     }
 
-    public String decrypt(String encryptedBase64, InetAddress infoClient) {
+    public String decrypt(String encryptedBase64) {
         try {
-            Cipher cipher = initCipher(Cipher.DECRYPT_MODE, infoClient);
+            Cipher cipher = initCipher(Cipher.DECRYPT_MODE);
             byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(encryptedBase64));
             return new String(decrypted, "UTF-8");
         } catch (Exception e) {
