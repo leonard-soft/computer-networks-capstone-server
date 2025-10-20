@@ -11,17 +11,25 @@ import java.util.Base64;
 public class encryptData {
 
     private final ManageLogs logs;
-    private final GenerateAES generateAES;
+    private final String keyBase64;
+    private final String ivBase64;
 
-    public encryptData() {
+    /**
+     * Constructor: recibe las claves AES en Base64 (generadas previamente por GenerateAES)
+     */
+    public encryptData(String keyBase64, String ivBase64) {
         this.logs = new ManageLogs();
-        this.generateAES = new GenerateAES();
+        this.keyBase64 = keyBase64;
+        this.ivBase64 = ivBase64;
     }
 
-
+    /**
+     * Inicializa el Cipher con las claves AES y el modo indicado (encriptar o desencriptar)
+     */
     private Cipher initCipher(int mode) throws Exception {
-        byte[] keyBytes = Base64.getDecoder().decode(generateAES.getKey());
-        byte[] ivBytes = Base64.getDecoder().decode(generateAES.getIv());
+        byte[] keyBytes = Base64.getDecoder().decode(keyBase64);
+        byte[] ivBytes = Base64.getDecoder().decode(ivBase64);
+
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 
@@ -30,6 +38,9 @@ public class encryptData {
         return cipher;
     }
 
+    /**
+     * Encripta un texto y lo devuelve en Base64
+     */
     public String encrypt(String data) {
         try {
             Cipher cipher = initCipher(Cipher.ENCRYPT_MODE);
@@ -41,6 +52,9 @@ public class encryptData {
         }
     }
 
+    /**
+     * Desencripta texto cifrado en Base64
+     */
     public String decrypt(String encryptedBase64) {
         try {
             Cipher cipher = initCipher(Cipher.DECRYPT_MODE);
