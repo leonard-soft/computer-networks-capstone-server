@@ -16,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -167,12 +166,12 @@ public class TcpService {
                                     Player player = userService.getByUsername(username);
                                     LoginResponseDTO response = new LoginResponseDTO(success, message, player.getUserId());
                                     String jsonResponse = gson.toJson(response) + "\n";
-                                    sendEncryptedData(client, jsonResponse);
+                                    sendEncryptedData(out, jsonResponse);
                                 } catch (JsonSyntaxException | IllegalArgumentException e) {
                                     manageLogs.saveLog("ERROR", "Login error: " + e.getMessage());
                                     LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage(), 0);
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    sendEncryptedData(client, jsonError);
+                                    sendEncryptedData(out, jsonError);
                                 }
                                 break;
                             case "get_online_users":
@@ -180,12 +179,12 @@ public class TcpService {
                                     List<String> onlineUsers = userService.getOnlineUsers();
                                     ConnectedUsersResponseDTO response = new ConnectedUsersResponseDTO(onlineUsers.toArray(new String[0]));
                                     String jsonResponse = gson.toJson(response) + "\n";
-                                    sendEncryptedData(client, jsonResponse);
+                                    sendEncryptedData(out, jsonResponse);
                                 } catch (RuntimeException e) {
                                     manageLogs.saveLog("ERROR", "Error getting online users: " + e.getMessage());
                                     ConnectedUsersResponseDTO errorResponse = new ConnectedUsersResponseDTO(new String[0]);
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    sendEncryptedData(client, jsonError);
+                                    sendEncryptedData(out, jsonError);
                                 }
                                 break;
 
@@ -195,24 +194,24 @@ public class TcpService {
                                     GameDTO game = roomService.createGameAndRegisterHost(username);
                                     RegisterResponseDTO response = new RegisterResponseDTO(true, "Game created: " + game.getGame_id());
                                     String jsonResponse = gson.toJson(response) + "\n";
-                                    sendEncryptedData(client, jsonResponse);
+                                    sendEncryptedData(out, jsonResponse);
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error creating game: " + e.getMessage());
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    sendEncryptedData(client, jsonError);
+                                    sendEncryptedData(out, jsonError);
                                 }
                                 break;
                             case "get_active_games":
                                 try {
                                     List<GameDTO> activeGames = roomService.getActiveGames();
                                     String jsonResponse = gson.toJson(activeGames) + "\n";
-                                    sendEncryptedData(client, jsonResponse);
+                                    sendEncryptedData(out, jsonResponse);
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error getting active games: " + e.getMessage());
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    sendEncryptedData(client, jsonError);
+                                    sendEncryptedData(out, jsonError);
                                 }
                                 break;
                             case "SEND_INVITATION":
@@ -305,14 +304,13 @@ public class TcpService {
     }
 
 
-    public void sendEncryptedData(Socket client, String data) {
+    public void sendEncryptedData(OutputStream out, String data) {
         try {
-            OutputStream out = connectedClients.get(client);
             if (out != null) {
                 String encryptedData = aes.encrypt(data);
                 out.write((encryptedData + "\n").getBytes(StandardCharsets.UTF_8));
                 out.flush();
-                manageLogs.saveLog("INFO", "Data sent to client: " + client);
+                manageLogs.saveLog("INFO", "Encrypted data sent to client.");
             }
         } catch (Exception e) {
             manageLogs.saveLog("ERROR", "Failed to send encrypted data: " + e.getMessage());
