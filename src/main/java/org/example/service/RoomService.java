@@ -6,11 +6,7 @@ import org.example.entity.Player;
 import org.example.jpa.Queries;
 import org.example.logs.ManageLogs;
 
-import java.net.InetAddress;
-import java.util.Base64;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomService {
     private final ManageLogs manageLogs = new ManageLogs();
