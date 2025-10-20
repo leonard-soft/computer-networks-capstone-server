@@ -34,7 +34,8 @@ public class TcpService {
     private static final Map<String, OutputStream> connectedClients = new ConcurrentHashMap<>();
     public static final Map<Integer, GameSession> activeGameSessions = new ConcurrentHashMap<>();
     private final ManageLogs manageLogs = new ManageLogs();
-    private final GenerateAES generateAES = new GenerateAES();;
+    private final GenerateAES generateAES = new GenerateAES();
+    ;
 
     /**
      * A simple constructor to initialize the tcp
@@ -214,7 +215,8 @@ public class TcpService {
                                 break;
                             case "SEND_INVITATION":
                                 try {
-                                    if (username == null) throw new IllegalStateException("User must be logged in to send invitations.");
+                                    if (username == null)
+                                        throw new IllegalStateException("User must be logged in to send invitations.");
                                     InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()), InvitationPayload.class);
                                     roomService.createInvitation(invPayload.getGameId(), invPayload.getInvitedUsername());
                                     InvitationPayload notificationPayload = new InvitationPayload(username, invPayload.getInvitedUsername(), invPayload.getGameId());
@@ -225,7 +227,8 @@ public class TcpService {
                                 break;
                             case "DENY_INVITATION":
                                 try {
-                                    if (username == null) throw new IllegalStateException("User must be logged in to deny invitations.");
+                                    if (username == null)
+                                        throw new IllegalStateException("User must be logged in to deny invitations.");
                                     InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()), InvitationPayload.class);
                                     roomService.respondToInvitation(invPayload.getGameId(), username, false);
                                     Map<String, String> payload = Map.of("deniedBy", username, "gameId", String.valueOf(invPayload.getGameId()));
@@ -236,7 +239,8 @@ public class TcpService {
                                 break;
                             case "ACCEPT_INVITATION":
                                 try {
-                                    if (username == null) throw new IllegalStateException("User must be logged in to accept invitations.");
+                                    if (username == null)
+                                        throw new IllegalStateException("User must be logged in to accept invitations.");
                                     InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()), InvitationPayload.class);
                                     String inviterUsername = invPayload.getInviterUsername();
                                     int gameId = invPayload.getGameId();
