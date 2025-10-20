@@ -98,9 +98,6 @@ public class TcpService {
 
             manageLogs.saveLog("INFO", "Sent server public key to client: " + client.getInetAddress());
 
-
-            System.out.println("fuera del hilo");
-
             new Thread(() -> {
                 String username = null;
                 OutputStream out = null;
@@ -317,7 +314,11 @@ public class TcpService {
     public void sendEncryptedData(OutputStream out, String data) {
         try {
             if (out != null) {
+
                 String encryptedData = aes.encrypt(data);
+
+                System.out.println("encript data: " + encryptedData);
+
                 out.write((encryptedData + "\n").getBytes(StandardCharsets.UTF_8));
                 out.flush();
                 manageLogs.saveLog("INFO", "Encrypted data sent to client.");
