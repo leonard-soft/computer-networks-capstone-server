@@ -2,20 +2,14 @@ package org.example.service;
 
 import org.example.dto.GameDTO;
 import org.example.dto.GameHasUser;
-import org.example.dto.KeysAES;
 import org.example.entity.Player;
 import org.example.jpa.Queries;
 import org.example.logs.ManageLogs;
 
-import java.net.InetAddress;
-import java.util.Base64;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomService {
     private final ManageLogs manageLogs = new ManageLogs();
-    private Map<InetAddress, KeysAES> userKeys = new ConcurrentHashMap<>();
 
     /**
      * Creates a new game and registers the host with users_status = true.
@@ -99,19 +93,5 @@ public class RoomService {
             manageLogs.saveLog("INFO", "User " + inviteeUsername + " declined invitation for game " + gameId);
             return "Invitation declined.";
         }
-    }
-
-    public void saveClientKeysAES(InetAddress infoClient, byte[] key, byte[] iv){
-        KeysAES clientKeys = new KeysAES(Base64.getEncoder().encodeToString(key),
-                Base64.getEncoder().encodeToString(iv));
-        userKeys.put(infoClient, clientKeys);
-    }
-
-    public KeysAES findKeys(InetAddress infoClient){
-        return userKeys.get(infoClient);
-    }
-
-    public void deleKeys(InetAddress infoClient){
-        userKeys.remove(infoClient);
     }
 }
