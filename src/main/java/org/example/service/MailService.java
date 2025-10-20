@@ -12,14 +12,16 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.example.dto.register.RegisterRequestPayload;
+import org.example.dto.register.RegisterDataDto;
+
+import com.fasterxml.jackson.core.util.RequestPayload;
 
 public class MailService {
 
     private static final SecureRandom random = new SecureRandom();
     private static final int CODE_LENGTH = 6;
     private final Map<String, CodeEntry> codes = new ConcurrentHashMap<>();
-    private final Map<String, RegisterRequestPayload> users = new ConcurrentHashMap<>();
+    private final Map<String, RegisterDataDto> users = new ConcurrentHashMap<>();
     private final ScheduledExecutorService cleaner = Executors.newSingleThreadScheduledExecutor();
 
     // Configuración SMTP (tu correo Gmail)
@@ -56,11 +58,11 @@ public class MailService {
      * @param ttlSeconds tiempo de vida del código en segundos (ej: 300 = 5 minutos)
      * @throws MessagingException si ocurre un error al enviar el correo
      */
-    public void generateAndSend(String email, long ttlSeconds, RegisterRequestPayload payload) throws MessagingException {
+    public void generateAndSend(String email, long ttlSeconds, RegisterDataDto dto) throws MessagingException {
         String code = generate6DigitCode();
         Instant expiresAt = Instant.now().plusSeconds(ttlSeconds);
         codes.put(email.toLowerCase(), new CodeEntry(code, expiresAt));
-        users.put(code, payload);
+        users.put(code, dto);
 
         String subject = "código de verificación";
         String body = "Hola,\n\nTu código de verificación es: " + code +
@@ -112,7 +114,7 @@ public class MailService {
         Transport.send(message);
     }
 
-    public RegisterRequestPayload getUserPayload(String Code){
+    public RegisterDataDto getUserPayload(String Code){
         return users.get(Code);
     }
 

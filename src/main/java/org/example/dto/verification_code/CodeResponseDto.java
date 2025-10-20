@@ -1,10 +1,10 @@
-package org.example.dto;
+package org.example.dto.verification_code;
 
-public class RegisterResponseDTO {
+public class CodeResponseDto {
     private boolean success;
     private String message;
 
-    public RegisterResponseDTO(boolean success, String message){
+    public CodeResponseDto(boolean success, String message){
         this.success = success;
         this.message = message;
     }

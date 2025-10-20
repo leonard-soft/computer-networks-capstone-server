@@ -1,21 +1,17 @@
-package org.example.dto;
+package org.example.dto.register;
 
-public class LoginResponseDTO{
+public class RegisterResponseDTO {
     private boolean success;
     private String message;
-    private int userId;
 
-    public LoginResponseDTO(boolean success, String message, int userId){
+    public RegisterResponseDTO(boolean success, String message){
         this.success = success;
         this.message = message;
-        this.userId = userId;
     }
 
     public boolean isSuccess() { return success; }
     public void setSuccess(boolean success) { this.success = success; }
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
-    public int getUserId() {return userId;}
-    public void setUserID(int userId) { this.userId = userId;}
 
 }
