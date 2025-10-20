@@ -8,6 +8,7 @@ import org.example.dto.register.RegisterRequestPayload;
 import org.example.encrypt.GenerateAES;
 import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
+import org.example.service.MailService;
 import org.example.service.RoomService;
 import org.example.service.UserService;
 
@@ -36,7 +37,7 @@ public class TcpService {
     private final ManageLogs manageLogs = new ManageLogs();
     private final GenerateAES generateAES = new GenerateAES();
     private static final encryptData aes = new encryptData();
-
+    private static final MailService mailService = new MailService("liuxeeuu@gmail.com", "mzqw uncm sirt ksbu");
 
     /**
      * A simple constructor to initialize the tcp
@@ -86,7 +87,7 @@ public class TcpService {
         generateAES.createKeysRandom();
 
         while (true) {
-            System.out.println("INFO, Waiting a client");
+            System.out.println("[INFO] : Waiting a client.");
             Socket client = tcpSocket.accept();
             manageLogs.saveLog("INFO", "Client connected: " + client.getInetAddress());
             String key = generateAES.getKey();
@@ -138,15 +139,16 @@ public class TcpService {
                         switch (req.getType()) {
                             case "register":
                                 RegisterRequestPayload requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RegisterRequestPayload.class);
-                                RequestPayload requestPayloads = new RequestPayload();
-                                requestPayloads.username = requestPayload.username;
-                                requestPayloads.password = requestPayload.password;
+                                
+                                //RequestPayload requestPayloads = new RequestPayload();
+                                //requestPayloads.username = requestPayload.username;
+                                //requestPayloads.password = requestPayload.password;
+                                //userService.registerUser(requestPayloads);
 
-                                userService.registerUser(requestPayloads);
-
-                                System.out.println(requestPayload.email + " " + requestPayload.username);
+                                //System.out.println(requestPayload.email + " " + requestPayload.username);
 
                                 try {
+                                    mailService.generateAndSend(requestPayload.email, 300, requestPayload);
                                     String message = "register completed succesfully";
                                     RegisterResponseDTO register = new RegisterResponseDTO(true, message);
                                     String jsonResponse = gson.toJson(register) + "\n";

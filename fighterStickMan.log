@@ -435,3 +435,49 @@
 [20-10-2025 13:43:11] [INFO] Attempting to register user: cepedita
 [20-10-2025 13:43:12] [INFO] User registered successfully: cepedita
 [20-10-2025 13:43:12] [INFO] Encrypted data sent to client.
+[20-10-2025 14:11:14] [INFO] UDP service is now listening on port 9876
+[20-10-2025 14:11:14] [INFO] TCP socket: listening in port 5000
+[20-10-2025 14:11:57] [INFO] Client connected: /127.0.0.1
+[20-10-2025 14:11:57] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 14:11:57] [INFO] Request received: register from unknown user
+[20-10-2025 14:12:00] [INFO] Encrypted data sent to client.
+[20-10-2025 14:36:38] [INFO] Client connected: /127.0.0.1
+[20-10-2025 14:36:38] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 14:36:38] [INFO] Request received: register from unknown user
+[20-10-2025 14:36:41] [INFO] Encrypted data sent to client.
+[20-10-2025 14:37:23] [INFO] Client connected: /127.0.0.1
+[20-10-2025 14:37:23] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 14:37:23] [INFO] Request received: register from unknown user
+[20-10-2025 14:37:25] [INFO] Encrypted data sent to client.
+[20-10-2025 14:37:35] [INFO] Client connected: /127.0.0.1
+[20-10-2025 14:37:35] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 14:37:35] [INFO] Request received: register from unknown user
+[20-10-2025 14:37:38] [INFO] Encrypted data sent to client.
+[20-10-2025 14:41:05] [INFO] Client connected: /127.0.0.1
+[20-10-2025 14:41:05] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 14:41:05] [INFO] Request received: register from unknown user
+[20-10-2025 14:41:07] [INFO] Encrypted data sent to client.
+[20-10-2025 14:41:19] [INFO] Client connected: /127.0.0.1
+[20-10-2025 14:41:19] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 14:41:19] [INFO] Request received: register from unknown user
+[20-10-2025 14:41:22] [INFO] Encrypted data sent to client.
+[20-10-2025 14:46:59] [INFO] Client connected: /127.0.0.1
+[20-10-2025 14:46:59] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 14:46:59] [INFO] Request received: register from unknown user
+[20-10-2025 14:47:03] [INFO] Encrypted data sent to client.
+[20-10-2025 14:47:37] [INFO] Client connected: /127.0.0.1
+[20-10-2025 14:47:37] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 14:47:37] [INFO] Request received: register from unknown user
+[20-10-2025 14:47:39] [INFO] Encrypted data sent to client.
+[20-10-2025 15:00:21] [INFO] Client connected: /127.0.0.1
+[20-10-2025 15:00:21] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 15:00:21] [INFO] Request received: register from unknown user
+[20-10-2025 15:00:24] [INFO] Encrypted data sent to client.
+[20-10-2025 15:06:34] [INFO] Client connected: /127.0.0.1
+[20-10-2025 15:06:34] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 15:06:34] [INFO] Request received: register from unknown user
+[20-10-2025 15:06:36] [INFO] Encrypted data sent to client.
+[20-10-2025 15:07:07] [INFO] Client connected: /127.0.0.1
+[20-10-2025 15:07:07] [INFO] Sent server public key to client: /127.0.0.1
+[20-10-2025 15:07:08] [INFO] Request received: register from unknown user
+[20-10-2025 15:07:09] [INFO] Encrypted data sent to client.
