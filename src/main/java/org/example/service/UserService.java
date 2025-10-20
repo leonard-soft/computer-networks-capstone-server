@@ -8,8 +8,11 @@ import org.example.jpa.Queries;
 import org.example.logs.ManageLogs;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 
 import java.util.List;
+
 
 public class UserService {
 
@@ -81,17 +84,32 @@ public class UserService {
      * @param  username, boolean state
      *
      */
-    public void updateUserState(String username, boolean state) {
+    public void updateUserState(String username, String state) {
         EntityManager em = JpaUtil.getEntityManager();
-        try {
-            Player player = em.find(Player.class, username);
-            if (player != null) {
-                player.setUserState(state);
-                em.getTransaction().begin();
-                em.merge(player);
-                em.getTransaction().commit();
-                manageLogs.saveLog("INFO", "User state updated for " + username + " to " + (state ? "online" : "offline"));
-            }
+        EntityTransaction transaction = null;
+
+        try { 
+            transaction = em.getTransaction();
+            transaction.begin();
+        
+            Long userCount = (Long) em.createNativeQuery("SELECT COUNT(*) FROM game_user WHERE username = :username")
+            .setParameter("username", username)
+            .getSingleResult();
+            System.out.println("DEBUG - Users found: " + userCount + " for username: " + username);
+
+            Query query = em.createNativeQuery("UPDATE game_user SET user_state = :state WHERE username = :username");
+            query.setParameter("state", state);
+            query.setParameter("username", username);
+
+            int updatedRows = query.executeUpdate();
+            em.getTransaction().commit();
+        
+            if (updatedRows > 0) {
+                String status = "true".equalsIgnoreCase(state) ? "online" : "offline";
+                manageLogs.saveLog("INFO", "User state updated for " + username + " to " + status);
+            } else {
+                manageLogs.saveLog("WARN", "No user found with username: " + username);
+            }   
         } catch (Exception e) {
             em.getTransaction().rollback();
             manageLogs.saveLog("ERROR", "Error updating user state for " + username + ": " + e.getMessage());

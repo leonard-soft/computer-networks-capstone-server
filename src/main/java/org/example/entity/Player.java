@@ -15,7 +15,7 @@ public class Player {
     @Column
     private String passwordSalt;
     @Column(name = "user_state")
-    private boolean userState;
+    private String userState;
     @Column(name = "user_match_win_quantity")
     private int userMatchWinCount;
 
@@ -23,7 +23,7 @@ public class Player {
         this.username = username;
         this.password = password;
         this.passwordSalt = passwordSalt;
-        this.userState = false;
+        this.userState = "offline";
         this.userMatchWinCount = 0;
     }
 
@@ -53,11 +53,11 @@ public class Player {
         this.password = password;
     }
 
-    public boolean getUserState(){
+    public String getUserState(){
         return userState;
     }
 
-    public void setUserState(boolean userState){
+    public void setUserState(String userState){
         this.userState = userState;
     }
 

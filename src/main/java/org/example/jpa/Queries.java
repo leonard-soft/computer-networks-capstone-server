@@ -37,7 +37,6 @@ public class Queries {
         }
     }
 
-
     /**
      * This method is a query to create a new game in the database to which the object
      * saved in the database is returned.

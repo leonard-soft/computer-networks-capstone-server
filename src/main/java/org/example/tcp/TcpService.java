@@ -124,7 +124,7 @@ public class TcpService {
                         if (line == null) {
                             if (username != null) {
                                 manageLogs.saveLog("INFO", "Client " + username + " disconnected.");
-                                userService.updateUserState(username, false);
+                                // userService.updateUserState(username, "offline");
                                 connectedClients.remove(username);
 
                                 // Notify UdpService to remove the player
@@ -159,6 +159,7 @@ public class TcpService {
                             case "login":
                                 try {
                                     String message;
+                                    System.out.println("REQUEST TYPE: LOGIN");
                                     requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
                                     if (requestPayload == null || requestPayload.username == null) {
                                         throw new IllegalArgumentException("Invalid payload: Username is missing");
@@ -167,7 +168,7 @@ public class TcpService {
                                     if (success) {
                                         message = "Login successful";
                                         username = requestPayload.username;
-                                        userService.updateUserState(username, true);
+                                        userService.updateUserState(username, "online");
                                         connectedClients.put(username, out);
                                         manageLogs.saveLog("INFO", "User " + username + " logged in and added to connected clients.");
                                     } else {
@@ -298,7 +299,7 @@ public class TcpService {
                     if (username != null) {
                         manageLogs.saveLog("ERROR", "Error handling client " + username + ": " + e.getMessage());
                         UserService userService = new UserService();
-                        userService.updateUserState(username, false);
+                        userService.updateUserState(username, "offline");
                         connectedClients.remove(username);
 
                         // Notify UdpService to remove the player
