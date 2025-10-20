@@ -1,9 +1,12 @@
 package org.example.udp;
 
-import org.example.dto.DataTransferDTO;
-import org.example.dto.GameSession;
-import org.example.dto.PlayerConnection;
+import com.google.gson.Gson;
+import org.example.dto.*;
+import org.example.encrypt.GenerateAES;
+import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
+import org.example.rsa.GenerateRSAKeys;
+import org.example.service.RoomService;
 import org.example.tcp.TcpService;
 
 import java.io.*;
@@ -18,11 +21,17 @@ public class UdpService {
     private final DatagramSocket socket;
     private final ManageLogs manageLogs;
     private final Map<Integer, PlayerConnection> connections = new HashMap<>();
+    private final GenerateAES aes;
+    private final RoomService roomService;
+    private final GenerateRSAKeys generateRSAKeys;
     private boolean running;
 
     public UdpService() throws SocketException {
         this.socket = new DatagramSocket(9876); // Using a fixed port for predictability
         this.manageLogs = new ManageLogs();
+        this.aes = new GenerateAES();
+        this.roomService = new RoomService();
+        this.generateRSAKeys= new GenerateRSAKeys();
     }
 
     public void listen() {
@@ -115,14 +124,62 @@ public class UdpService {
             manageLogs.saveLog("WARN", "No connection info to send UDP packet to player: " + playerId);
             return;
         }
+
         try {
-            byte[] buffer = objectToBytes(data);
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, player.getIp(), player.getPort());
-            socket.send(packet);
-        } catch (IOException e) {
+            Gson gson = new Gson();
+            encryptData aesEncryptor = new encryptData();
+
+            //  Obtener las llaves
+            Keys keyPublic = TcpService.getKey(player.getIp());
+            KeysAES aesKeys = roomService.findKeys(player.getIp());
+
+            if (keyPublic == null || aesKeys == null) {
+                manageLogs.saveLog("ERROR", "Missing keys for UDP encryption for player: " + playerId);
+                return;
+            }
+
+            //  Enviar las llaves AES solo una vez
+            if (!player.isAesKeysSent()) {
+                String combinedAES = aesKeys.getKey() + ":" + aesKeys.getIv();
+                String encryptedAES = generateRSAKeys.encryptData(
+                        combinedAES,
+                        generateRSAKeys.convertPublicKeyClient(keyPublic.getPublicUserKey())
+                );
+
+                byte[] aesBuffer = encryptedAES.getBytes();
+                DatagramPacket aesPacket = new DatagramPacket(
+                        aesBuffer,
+                        aesBuffer.length,
+                        player.getIp(),
+                        player.getPort()
+                );
+                socket.send(aesPacket);
+
+                player.setAesKeysSent(true); // Marca como enviadas las llaves
+                manageLogs.saveLog("INFO", "AES keys sent to player " + playerId);
+            }
+
+            // Encriptar los datos con AES (ya que el cliente ya las tiene)
+            String json = gson.toJson(data);
+            String encryptedData = aesEncryptor.encrypt(json, player.getIp());
+
+            byte[] dataBuffer = encryptedData.getBytes();
+            DatagramPacket dataPacket = new DatagramPacket(
+                    dataBuffer,
+                    dataBuffer.length,
+                    player.getIp(),
+                    player.getPort()
+            );
+            socket.send(dataPacket);
+
+            manageLogs.saveLog("INFO", "Encrypted UDP data sent to player: " + playerId);
+
+        } catch (Exception e) {
             manageLogs.saveLog("ERROR", "Error sending UDP packet to player " + playerId + ": " + e.getMessage());
         }
     }
+
+
 
     private void sendToBothPlayers(GameSession session, DataTransferDTO data) {
         sendPacket(data, session.getPlayer1Id());

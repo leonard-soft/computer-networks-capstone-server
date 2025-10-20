@@ -3,7 +3,10 @@ package org.example.tcp;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.example.dto.*;
+import org.example.encrypt.GenerateAES;
+import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
+import org.example.rsa.GenerateRSAKeys;
 import org.example.service.RoomService;
 import org.example.service.UserService;
 
@@ -14,8 +17,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.PublicKey;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +32,9 @@ public class TcpService {
     private static final Map<String, OutputStream> connectedClients = new ConcurrentHashMap<>();
     public static final Map<Integer, GameSession> activeGameSessions = new ConcurrentHashMap<>();
     private final ManageLogs manageLogs = new ManageLogs();
+    private final GenerateAES generateAES = new GenerateAES();
+    private static final Map<InetAddress, Keys> publicKeysUser = new ConcurrentHashMap<>();
+    private final GenerateRSAKeys generateRSAKeys = new GenerateRSAKeys();
 
     /**
      * A simple constructor to initialize the tcp
@@ -71,10 +80,30 @@ public class TcpService {
     public void run() throws Exception {
         ServerSocket tcpSocket = new ServerSocket(this.port);
         manageLogs.saveLog("INFO", "TCP socket: listening in port " + this.port);
-
+        generateRSAKeys.initializeKeys();
         while (true) {
             Socket client = tcpSocket.accept();
-            manageLogs.saveLog("INFO", "Client Connection:" + client.getInetAddress());
+            manageLogs.saveLog("INFO", "Client connected: " + client.getInetAddress());
+
+            // Read the public key sent by the client
+            BufferedReader readerClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            String clientPublicKeyBase64 = readerClient.readLine(); // llave pública del cliente en Base64
+
+            // Prepare the server's public key
+            String serverPublicKeyBase64  = Base64.getEncoder().encodeToString(generateRSAKeys.getPublicKey().getEncoded());
+
+            // Save keys in the Map
+            Keys clientKeys = new Keys(client.getInetAddress(), serverPublicKeyBase64, clientPublicKeyBase64);
+            publicKeysUser.put(client.getInetAddress(), clientKeys);
+
+            // Send the server's public key to the client
+            OutputStream outKey = client.getOutputStream();
+            String jsonResponseKey = new Gson().toJson(new Keys(null, serverPublicKeyBase64, null)) + "\n";
+            outKey.write(jsonResponseKey.getBytes());
+            outKey.flush();
+
+            manageLogs.saveLog("INFO", "Sent server public key to client: " + client.getInetAddress());
+
 
             new Thread(() -> {
                 String username = null;
@@ -166,6 +195,10 @@ public class TcpService {
                                 try {
                                     if (username == null) throw new IllegalArgumentException("Must be logged in");
                                     GameDTO game = roomService.createGameAndRegisterHost(username);
+                                    generateAES.createKeysRandom();
+                                    roomService.saveClientKeysAES(client.getInetAddress(),
+                                            Base64.getDecoder().decode(generateAES.getKey32()),
+                                            Base64.getDecoder().decode(generateAES.getKey16()));
                                     RegisterResponseDTO response = new RegisterResponseDTO(true, "Game created: " + game.getGame_id());
                                     String jsonResponse = gson.toJson(response) + "\n";
                                     out.write(jsonResponse.getBytes());
@@ -268,4 +301,47 @@ public class TcpService {
             }).start();
         }
     }
+
+    public static Keys getKey(InetAddress ip){
+        return publicKeysUser.get(ip);
+    }
+
+    public void sendEncryptedData(InetAddress client, String data, RoomService roomService) {
+        try {
+            KeysAES aesKeys = roomService.findKeys(client);
+            if (aesKeys == null) {
+                manageLogs.saveLog("ERROR", "No AES keys found for client " + client);
+                return;
+            }
+
+            Keys publicKeyClient = publicKeysUser.get(client);
+            if (publicKeyClient == null) {
+                manageLogs.saveLog("ERROR", "No RSA public key found for client " + client);
+                return;
+            }
+
+            String combinedAES = aesKeys.getKey() + ":" + aesKeys.getIv();
+            String encryptedAES = generateRSAKeys.encryptData(
+                    combinedAES,
+                    generateRSAKeys.convertPublicKeyClient(publicKeyClient.getPublicUserKey())
+            );
+
+            OutputStream out = connectedClients.get(client);
+            if (out != null) {
+                out.write((encryptedAES + "\n").getBytes());
+                out.flush();
+                manageLogs.saveLog("INFO", "AES key sent to client: " + client);
+
+                encryptData aes = new encryptData();
+                String encryptedData = aes.encrypt(data, client);
+                out.write((encryptedData + "\n").getBytes());
+                out.flush();
+                manageLogs.saveLog("INFO", "Data sent to client: " + client);
+            }
+
+        } catch (Exception e) {
+            manageLogs.saveLog("ERROR", "Failed to send encrypted data: " + e.getMessage());
+        }
+    }
+
 }
