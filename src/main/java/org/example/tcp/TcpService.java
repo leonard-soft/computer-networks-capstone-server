@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,6 +34,7 @@ public class TcpService {
     public static final Map<Integer, GameSession> activeGameSessions = new ConcurrentHashMap<>();
     private final ManageLogs manageLogs = new ManageLogs();
     private final GenerateAES generateAES = new GenerateAES();
+    private static final encryptData aes = new encryptData();
 
 
     /**
@@ -165,12 +167,12 @@ public class TcpService {
                                     Player player = userService.getByUsername(username);
                                     LoginResponseDTO response = new LoginResponseDTO(success, message, player.getUserId());
                                     String jsonResponse = gson.toJson(response) + "\n";
-                                    sendEncryptedData(client.getInetAddress(), jsonResponse);
+                                    sendEncryptedData(client, jsonResponse);
                                 } catch (JsonSyntaxException | IllegalArgumentException e) {
                                     manageLogs.saveLog("ERROR", "Login error: " + e.getMessage());
                                     LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage(), 0);
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    sendEncryptedData(client.getInetAddress(), jsonError);
+                                    sendEncryptedData(client, jsonError);
                                 }
                                 break;
                             case "get_online_users":
@@ -178,12 +180,12 @@ public class TcpService {
                                     List<String> onlineUsers = userService.getOnlineUsers();
                                     ConnectedUsersResponseDTO response = new ConnectedUsersResponseDTO(onlineUsers.toArray(new String[0]));
                                     String jsonResponse = gson.toJson(response) + "\n";
-                                    sendEncryptedData(client.getInetAddress(), jsonResponse);
+                                    sendEncryptedData(client, jsonResponse);
                                 } catch (RuntimeException e) {
                                     manageLogs.saveLog("ERROR", "Error getting online users: " + e.getMessage());
                                     ConnectedUsersResponseDTO errorResponse = new ConnectedUsersResponseDTO(new String[0]);
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    sendEncryptedData(client.getInetAddress(), jsonError);
+                                    sendEncryptedData(client, jsonError);
                                 }
                                 break;
 
@@ -193,24 +195,24 @@ public class TcpService {
                                     GameDTO game = roomService.createGameAndRegisterHost(username);
                                     RegisterResponseDTO response = new RegisterResponseDTO(true, "Game created: " + game.getGame_id());
                                     String jsonResponse = gson.toJson(response) + "\n";
-                                    sendEncryptedData(client.getInetAddress(), jsonResponse);
+                                    sendEncryptedData(client, jsonResponse);
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error creating game: " + e.getMessage());
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    sendEncryptedData(client.getInetAddress(), jsonError);
+                                    sendEncryptedData(client, jsonError);
                                 }
                                 break;
                             case "get_active_games":
                                 try {
                                     List<GameDTO> activeGames = roomService.getActiveGames();
                                     String jsonResponse = gson.toJson(activeGames) + "\n";
-                                    sendEncryptedData(client.getInetAddress(), jsonResponse);
+                                    sendEncryptedData(client, jsonResponse);
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error getting active games: " + e.getMessage());
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
-                                    sendEncryptedData(client.getInetAddress(), jsonError);
+                                    sendEncryptedData(client, jsonError);
                                 }
                                 break;
                             case "SEND_INVITATION":
@@ -303,17 +305,15 @@ public class TcpService {
     }
 
 
-    public void sendEncryptedData(InetAddress client, String data) {
+    public void sendEncryptedData(Socket client, String data) {
         try {
             OutputStream out = connectedClients.get(client);
             if (out != null) {
-                encryptData aes = new encryptData();
                 String encryptedData = aes.encrypt(data);
-                out.write((encryptedData + "\n").getBytes());
+                out.write((encryptedData + "\n").getBytes(StandardCharsets.UTF_8));
                 out.flush();
                 manageLogs.saveLog("INFO", "Data sent to client: " + client);
             }
-
         } catch (Exception e) {
             manageLogs.saveLog("ERROR", "Failed to send encrypted data: " + e.getMessage());
         }
