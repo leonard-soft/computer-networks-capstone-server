@@ -5,4 +5,5 @@ public class RequestPayload {
     public String password;
     public String email;
     public String code;
+    public int idGame;
 }
