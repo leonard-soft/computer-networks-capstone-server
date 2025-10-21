@@ -3,11 +3,15 @@ package org.example.tcp;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.example.dto.*;
-import org.example.dto.register.RegisterRequest;
-import org.example.dto.register.RegisterRequestPayload;
+import org.example.dto.login.LoginResponseDTO;
+import org.example.dto.register.RegisterDataDto;
+import org.example.dto.register.RegisterResponseDTO;
+import org.example.dto.verification_code.CodeDataDto;
+import org.example.dto.verification_code.CodeResponseDto;
 import org.example.encrypt.GenerateAES;
 import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
+import org.example.service.MailService;
 import org.example.service.RoomService;
 import org.example.service.UserService;
 
@@ -36,7 +40,7 @@ public class TcpService {
     private final ManageLogs manageLogs = new ManageLogs();
     private final GenerateAES generateAES = new GenerateAES();
     private static final encryptData aes = new encryptData();
-
+    private static final MailService mailService = new MailService("liuxeeuu@gmail.com", "mzqw uncm sirt ksbu");
 
     /**
      * A simple constructor to initialize the tcp
@@ -86,7 +90,7 @@ public class TcpService {
         generateAES.createKeysRandom();
 
         while (true) {
-            System.out.println("INFO, Waiting a client");
+            System.out.println("[INFO] : Waiting a client.");
             Socket client = tcpSocket.accept();
             manageLogs.saveLog("INFO", "Client connected: " + client.getInetAddress());
             String key = generateAES.getKey();
@@ -133,30 +137,45 @@ public class TcpService {
                             continue;
                         }
 
-                        RegisterRequest req = gson.fromJson(decryptedLine, RegisterRequest.class);
+                        Request req = gson.fromJson(decryptedLine, Request.class);
                         manageLogs.saveLog("INFO", "Request received: " + req.getType() + " from " + (username != null ? username : "unknown user"));
                         switch (req.getType()) {
+
+                            /**
+                             * @Register Case
+                             * 
+                             * use the mail service to send the random
+                             * code for the user.
+                             */
                             case "register":
-                                RegisterRequestPayload requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RegisterRequestPayload.class);
-                                RequestPayload requestPayloads = new RequestPayload();
-                                requestPayloads.username = requestPayload.username;
-                                requestPayloads.password = requestPayload.password;
-
-                                userService.registerUser(requestPayloads);
-
-                                System.out.println(requestPayload.email + " " + requestPayload.username);
-
                                 try {
-                                    String message = "register completed succesfully";
-                                    RegisterResponseDTO register = new RegisterResponseDTO(true, message);
+                                    System.out.println("REQUEST TYPE: REGISTER");
+                                    RequestPayload requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    RegisterDataDto registerDataDto = new RegisterDataDto();
+                                    registerDataDto.username = requestPayload.username;
+                                    registerDataDto.password = requestPayload.password;
+                                    registerDataDto.email = requestPayload.email;
+
+                                    mailService.generateAndSend(requestPayload.email, 300, registerDataDto);
+                                    manageLogs.saveLog("INFO", "Verification code sended for " + registerDataDto.username);
+                                    RegisterResponseDTO register = new RegisterResponseDTO(true, "register completed succesfully");
                                     String jsonResponse = gson.toJson(register) + "\n";
                                     sendEncryptedData(out, jsonResponse);
                                 } catch (Exception e) {
+                                    manageLogs.saveLog("INFO", "Verification code Error " + e.getMessage());
                                     RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
                                     sendEncryptedData(out, jsonError);
                                 }
                                 break;
+
+
+                            /**
+                             * @Login Case
+                             * 
+                             * get the username and password from the user to
+                             * do login.
+                             */
                             case "login":
                                 try {
                                     String message;
@@ -187,6 +206,46 @@ public class TcpService {
                                     sendEncryptedData(out, jsonError);
                                 }
                                 break;
+
+
+                            /**
+                             * @ VerifyCode Case
+                             * 
+                             * get the code from the client and use the mailService to 
+                             * validate the input and register the user into the database.
+                             */
+                            case "verify_code":
+                                try {
+                                    System.out.println("REQUEST TYPE: VERIDY CODE");
+                                    RequestPayload codeRequestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    CodeDataDto codeDataDto = new CodeDataDto();
+                                    codeDataDto.code = codeRequestPayload.code;
+                                    codeDataDto.email = codeRequestPayload.email;
+
+                                    System.out.println(codeDataDto.code + " " + codeDataDto.email);
+
+                                    boolean exists = mailService.verifyCode(codeDataDto.email, codeDataDto.code);
+                                    if (exists){
+                                        RegisterDataDto registerDataDto = mailService.getUserPayload(codeDataDto.code);
+                                        RequestPayload requestPayload = new RequestPayload();
+                                        requestPayload.username = registerDataDto.username;
+                                        requestPayload.password = registerDataDto.password;
+                                        userService.registerUser(requestPayload);
+                                        manageLogs.saveLog("ERROR", "Registration User");
+                                        CodeResponseDto codeResponseDto = new CodeResponseDto(true, "user " + 
+                                        requestPayload.username + " created successfully");
+                                        String jsonResponse = gson.toJson(codeResponseDto) + "\n";
+                                        sendEncryptedData(out, jsonResponse);
+                                    }
+                                } catch (Exception e) {
+                                    manageLogs.saveLog("ERROR", "Registration User Error: " + e.getMessage());
+                                    LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage(), 0);
+                                    String jsonError = gson.toJson(errorResponse) + "\n";
+                                    sendEncryptedData(out, jsonError);
+                                }
+                                break;
+
+
                             case "get_online_users":
                                 try {
                                     List<String> onlineUsers = userService.getOnlineUsers();
