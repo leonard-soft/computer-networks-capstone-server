@@ -115,7 +115,7 @@ public class TcpService {
                         if (encryptedLine == null) {
                             if (username != null) {
                                 manageLogs.saveLog("INFO", "Client " + username + " disconnected.");
-                                // userService.updateUserState(username, "offline");
+                                userService.updateUserState(username, "offline");
                                 connectedClients.remove(username);
 
                                 // Notify UdpService to remove the player

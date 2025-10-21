@@ -207,7 +207,7 @@ public class Queries {
         try {
             manageLogs.saveLog("INFO", "Fetching online users");
             TypedQuery<String> query = em.createQuery(
-                    "SELECT p.username FROM Player p WHERE p.userState = true", String.class
+                    "SELECT p.username FROM Player p WHERE p.userState = 'online'", String.class
             );
             List<String> users = query.getResultList();
             manageLogs.saveLog("INFO", "Found " + users.size() + " online users");
