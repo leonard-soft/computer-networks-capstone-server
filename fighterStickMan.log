@@ -1234,3 +1234,254 @@
 [21-10-2025 15:48:51] [INFO] Executing query to find player by username: sac
 [21-10-2025 15:48:51] [INFO] Player found: sac
 [21-10-2025 15:48:51] [WARN] Attempted to remove non-existent UDP connection for player ID: 4
+[21-10-2025 16:47:54] [INFO] UDP service is now listening on port 9876
+[21-10-2025 16:47:54] [INFO] TCP socket: listening in port 5000
+[21-10-2025 16:48:03] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:48:03] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:48:14] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:48:14] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:48:27] [INFO] Request received: login from unknown user
+[21-10-2025 16:48:27] [INFO] Login attempt for user: sac
+[21-10-2025 16:48:32] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:48:32] [INFO] Player found: sac
+[21-10-2025 16:48:32] [INFO] Login successful for user: sac
+[21-10-2025 16:48:32] [INFO] User state updated for sac to offline
+[21-10-2025 16:48:32] [INFO] User sac logged in and added to connected clients.
+[21-10-2025 16:48:32] [INFO] Encrypted data sent to client.
+[21-10-2025 16:48:34] [INFO] Request received: get_online_users from sac
+[21-10-2025 16:48:34] [INFO] Fetching online users
+[21-10-2025 16:48:34] [INFO] Found 2 online users
+[21-10-2025 16:48:34] [INFO] Encrypted data sent to client.
+[21-10-2025 16:48:44] [INFO] Request received: login from unknown user
+[21-10-2025 16:48:44] [INFO] Login attempt for user: said
+[21-10-2025 16:48:44] [INFO] Executing query to find player by username: said
+[21-10-2025 16:48:44] [INFO] Player found: said
+[21-10-2025 16:48:45] [INFO] Login successful for user: said
+[21-10-2025 16:48:45] [INFO] User state updated for said to offline
+[21-10-2025 16:48:45] [INFO] User said logged in and added to connected clients.
+[21-10-2025 16:48:45] [INFO] Encrypted data sent to client.
+[21-10-2025 16:48:49] [INFO] Request received: get_online_users from said
+[21-10-2025 16:48:49] [INFO] Fetching online users
+[21-10-2025 16:48:49] [INFO] Found 2 online users
+[21-10-2025 16:48:49] [INFO] Encrypted data sent to client.
+[21-10-2025 16:48:52] [INFO] Request received: create_game from said
+[21-10-2025 16:48:52] [INFO] Executing query to find player by username: said
+[21-10-2025 16:48:52] [INFO] Player found: said
+[21-10-2025 16:48:52] [INFO] New game created with ID: 4
+[21-10-2025 16:48:52] [INFO] User said registered to game 4
+[21-10-2025 16:48:52] [INFO] Game created by host said with ID: 4
+[21-10-2025 16:48:52] [INFO] Encrypted data sent to client.
+[21-10-2025 16:48:52] [INFO] Request received: SEND_INVITATION from said
+[21-10-2025 16:48:52] [INFO] Executing query to find player by username: null
+[21-10-2025 16:48:52] [WARN] No player found with username: null
+[21-10-2025 16:48:52] [WARN] Invitee not found for invitation: null
+[21-10-2025 16:48:52] [INFO] Sent message to sac: {"notificationType":"GAME_INVITATION","payload":{"inviterUsername":"said","gameId":0}}
+[21-10-2025 16:49:36] [INFO] Request received: get_online_users from said
+[21-10-2025 16:49:36] [INFO] Fetching online users
+[21-10-2025 16:49:36] [INFO] Found 2 online users
+[21-10-2025 16:49:36] [INFO] Encrypted data sent to client.
+[21-10-2025 16:50:02] [INFO] Request received: create_game from sac
+[21-10-2025 16:50:02] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:50:02] [INFO] Player found: sac
+[21-10-2025 16:50:02] [INFO] New game created with ID: 5
+[21-10-2025 16:50:02] [INFO] User sac registered to game 5
+[21-10-2025 16:50:02] [INFO] Game created by host sac with ID: 5
+[21-10-2025 16:50:02] [INFO] Encrypted data sent to client.
+[21-10-2025 16:50:02] [INFO] Request received: SEND_INVITATION from sac
+[21-10-2025 16:50:02] [INFO] Executing query to find player by username: null
+[21-10-2025 16:50:02] [WARN] No player found with username: null
+[21-10-2025 16:50:02] [WARN] Invitee not found for invitation: null
+[21-10-2025 16:50:02] [INFO] Sent message to said: {"notificationType":"GAME_INVITATION","payload":{"inviterUsername":"sac","gameId":0}}
+[21-10-2025 16:50:28] [INFO] Client sac disconnected.
+[21-10-2025 16:50:28] [INFO] User state updated for sac to offline
+[21-10-2025 16:50:28] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:50:28] [INFO] Player found: sac
+[21-10-2025 16:50:28] [WARN] Attempted to remove non-existent UDP connection for player ID: 4
+[21-10-2025 16:50:32] [INFO] Client said disconnected.
+[21-10-2025 16:50:32] [INFO] User state updated for said to offline
+[21-10-2025 16:50:32] [INFO] Executing query to find player by username: said
+[21-10-2025 16:50:32] [INFO] Player found: said
+[21-10-2025 16:50:32] [WARN] Attempted to remove non-existent UDP connection for player ID: 1
+[21-10-2025 16:50:41] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:50:41] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:50:48] [INFO] Request received: login from unknown user
+[21-10-2025 16:50:48] [INFO] Login attempt for user: said
+[21-10-2025 16:50:48] [INFO] Executing query to find player by username: said
+[21-10-2025 16:50:48] [INFO] Player found: said
+[21-10-2025 16:50:48] [INFO] Login successful for user: said
+[21-10-2025 16:50:48] [INFO] User state updated for said to offline
+[21-10-2025 16:50:48] [INFO] User said logged in and added to connected clients.
+[21-10-2025 16:50:48] [INFO] Encrypted data sent to client.
+[21-10-2025 16:50:49] [INFO] Request received: get_online_users from said
+[21-10-2025 16:50:49] [INFO] Fetching online users
+[21-10-2025 16:50:49] [INFO] Found 1 online users
+[21-10-2025 16:50:49] [INFO] Encrypted data sent to client.
+[21-10-2025 16:50:53] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:50:53] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:51:00] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:51:00] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:51:14] [INFO] Request received: login from unknown user
+[21-10-2025 16:51:14] [INFO] Login attempt for user: sac
+[21-10-2025 16:51:14] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:51:14] [INFO] Player found: sac
+[21-10-2025 16:51:14] [INFO] Login successful for user: sac
+[21-10-2025 16:51:14] [INFO] User state updated for sac to offline
+[21-10-2025 16:51:14] [INFO] User sac logged in and added to connected clients.
+[21-10-2025 16:51:14] [INFO] Encrypted data sent to client.
+[21-10-2025 16:51:16] [INFO] Request received: get_online_users from sac
+[21-10-2025 16:51:16] [INFO] Fetching online users
+[21-10-2025 16:51:16] [INFO] Found 2 online users
+[21-10-2025 16:51:16] [INFO] Encrypted data sent to client.
+[21-10-2025 16:51:18] [INFO] Request received: create_game from sac
+[21-10-2025 16:51:18] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:51:18] [INFO] Player found: sac
+[21-10-2025 16:51:18] [INFO] New game created with ID: 6
+[21-10-2025 16:51:18] [INFO] User sac registered to game 6
+[21-10-2025 16:51:18] [INFO] Game created by host sac with ID: 6
+[21-10-2025 16:51:18] [INFO] Encrypted data sent to client.
+[21-10-2025 16:51:18] [INFO] Request received: SEND_INVITATION from sac
+[21-10-2025 16:51:18] [INFO] Executing query to find player by username: null
+[21-10-2025 16:51:18] [WARN] No player found with username: null
+[21-10-2025 16:51:18] [WARN] Invitee not found for invitation: null
+[21-10-2025 16:51:18] [INFO] Sent message to said: {"notificationType":"GAME_INVITATION","payload":{"inviterUsername":"sac","gameId":0}}
+[21-10-2025 16:53:23] [INFO] Client said disconnected.
+[21-10-2025 16:53:23] [INFO] User state updated for said to offline
+[21-10-2025 16:53:23] [INFO] Executing query to find player by username: said
+[21-10-2025 16:53:23] [INFO] Player found: said
+[21-10-2025 16:53:23] [WARN] Attempted to remove non-existent UDP connection for player ID: 1
+[21-10-2025 16:53:28] [INFO] Client sac disconnected.
+[21-10-2025 16:53:28] [INFO] User state updated for sac to offline
+[21-10-2025 16:53:28] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:53:28] [INFO] Player found: sac
+[21-10-2025 16:53:28] [WARN] Attempted to remove non-existent UDP connection for player ID: 4
+[21-10-2025 16:53:51] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:53:51] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:54:00] [INFO] Request received: login from unknown user
+[21-10-2025 16:54:00] [INFO] Login attempt for user: sac
+[21-10-2025 16:54:00] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:54:01] [INFO] Player found: sac
+[21-10-2025 16:54:01] [INFO] Login successful for user: sac
+[21-10-2025 16:54:01] [INFO] User state updated for sac to offline
+[21-10-2025 16:54:01] [INFO] User sac logged in and added to connected clients.
+[21-10-2025 16:54:01] [INFO] Encrypted data sent to client.
+[21-10-2025 16:54:02] [INFO] Request received: get_online_users from sac
+[21-10-2025 16:54:02] [INFO] Fetching online users
+[21-10-2025 16:54:02] [INFO] Found 1 online users
+[21-10-2025 16:54:02] [INFO] Encrypted data sent to client.
+[21-10-2025 16:54:41] [INFO] Client sac disconnected.
+[21-10-2025 16:54:41] [INFO] User state updated for sac to offline
+[21-10-2025 16:54:41] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:54:41] [INFO] Player found: sac
+[21-10-2025 16:54:41] [WARN] Attempted to remove non-existent UDP connection for player ID: 4
+[21-10-2025 16:55:23] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:55:23] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:55:36] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:55:36] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:55:57] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:55:57] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:56:38] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:56:38] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:57:21] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:57:21] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:57:28] [INFO] Request received: login from unknown user
+[21-10-2025 16:57:28] [INFO] Login attempt for user: said
+[21-10-2025 16:57:28] [INFO] Executing query to find player by username: said
+[21-10-2025 16:57:28] [INFO] Player found: said
+[21-10-2025 16:57:28] [INFO] Login successful for user: said
+[21-10-2025 16:57:28] [INFO] User state updated for said to offline
+[21-10-2025 16:57:28] [INFO] User said logged in and added to connected clients.
+[21-10-2025 16:57:28] [INFO] Encrypted data sent to client.
+[21-10-2025 16:57:34] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:57:34] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:57:42] [INFO] Request received: login from unknown user
+[21-10-2025 16:57:42] [INFO] Login attempt for user: sac
+[21-10-2025 16:57:42] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:57:42] [INFO] Player found: sac
+[21-10-2025 16:57:43] [INFO] Login successful for user: sac
+[21-10-2025 16:57:43] [INFO] User state updated for sac to offline
+[21-10-2025 16:57:43] [INFO] User sac logged in and added to connected clients.
+[21-10-2025 16:57:43] [INFO] Encrypted data sent to client.
+[21-10-2025 16:57:44] [INFO] Request received: get_online_users from sac
+[21-10-2025 16:57:44] [INFO] Fetching online users
+[21-10-2025 16:57:44] [INFO] Found 2 online users
+[21-10-2025 16:57:44] [INFO] Encrypted data sent to client.
+[21-10-2025 16:57:47] [INFO] Request received: get_online_users from said
+[21-10-2025 16:57:47] [INFO] Fetching online users
+[21-10-2025 16:57:47] [INFO] Found 2 online users
+[21-10-2025 16:57:47] [INFO] Encrypted data sent to client.
+[21-10-2025 16:57:50] [INFO] Request received: create_game from said
+[21-10-2025 16:57:50] [INFO] Executing query to find player by username: said
+[21-10-2025 16:57:50] [INFO] Player found: said
+[21-10-2025 16:57:50] [INFO] New game created with ID: 7
+[21-10-2025 16:57:50] [INFO] User said registered to game 7
+[21-10-2025 16:57:50] [INFO] Game created by host said with ID: 7
+[21-10-2025 16:57:50] [INFO] Encrypted data sent to client.
+[21-10-2025 16:57:50] [INFO] Request received: SEND_INVITATION from said
+[21-10-2025 16:57:50] [INFO] Executing query to find player by username: null
+[21-10-2025 16:57:50] [WARN] No player found with username: null
+[21-10-2025 16:57:50] [WARN] Invitee not found for invitation: null
+[21-10-2025 16:57:50] [INFO] Sent message to sac: {"notificationType":"GAME_INVITATION","payload":{"inviterUsername":"said","gameId":0}}
+[21-10-2025 16:57:54] [INFO] Request received: get_online_users from sac
+[21-10-2025 16:57:54] [INFO] Fetching online users
+[21-10-2025 16:57:54] [INFO] Found 2 online users
+[21-10-2025 16:57:54] [INFO] Encrypted data sent to client.
+[21-10-2025 16:59:29] [INFO] Client said disconnected.
+[21-10-2025 16:59:29] [INFO] User state updated for said to offline
+[21-10-2025 16:59:29] [INFO] Executing query to find player by username: said
+[21-10-2025 16:59:29] [INFO] Player found: said
+[21-10-2025 16:59:29] [WARN] Attempted to remove non-existent UDP connection for player ID: 1
+[21-10-2025 16:59:34] [INFO] Client sac disconnected.
+[21-10-2025 16:59:34] [INFO] User state updated for sac to offline
+[21-10-2025 16:59:34] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:59:34] [INFO] Player found: sac
+[21-10-2025 16:59:34] [WARN] Attempted to remove non-existent UDP connection for player ID: 4
+[21-10-2025 16:59:41] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:59:41] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 16:59:48] [INFO] Request received: login from unknown user
+[21-10-2025 16:59:48] [INFO] Login attempt for user: sac
+[21-10-2025 16:59:48] [INFO] Executing query to find player by username: sac
+[21-10-2025 16:59:48] [INFO] Player found: sac
+[21-10-2025 16:59:48] [INFO] Login successful for user: sac
+[21-10-2025 16:59:48] [INFO] User state updated for sac to offline
+[21-10-2025 16:59:48] [INFO] User sac logged in and added to connected clients.
+[21-10-2025 16:59:48] [INFO] Encrypted data sent to client.
+[21-10-2025 16:59:49] [INFO] Request received: get_online_users from sac
+[21-10-2025 16:59:49] [INFO] Fetching online users
+[21-10-2025 16:59:49] [INFO] Found 1 online users
+[21-10-2025 16:59:49] [INFO] Encrypted data sent to client.
+[21-10-2025 16:59:54] [INFO] Client connected: /127.0.0.1
+[21-10-2025 16:59:54] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 17:00:03] [INFO] Request received: login from unknown user
+[21-10-2025 17:00:03] [INFO] Login attempt for user: said
+[21-10-2025 17:00:03] [INFO] Executing query to find player by username: said
+[21-10-2025 17:00:03] [INFO] Player found: said
+[21-10-2025 17:00:03] [INFO] Login successful for user: said
+[21-10-2025 17:00:03] [INFO] User state updated for said to offline
+[21-10-2025 17:00:03] [INFO] User said logged in and added to connected clients.
+[21-10-2025 17:00:03] [INFO] Encrypted data sent to client.
+[21-10-2025 17:00:04] [INFO] Request received: get_online_users from said
+[21-10-2025 17:00:04] [INFO] Fetching online users
+[21-10-2025 17:00:04] [INFO] Found 2 online users
+[21-10-2025 17:00:04] [INFO] Encrypted data sent to client.
+[21-10-2025 17:00:06] [INFO] Request received: create_game from said
+[21-10-2025 17:00:06] [INFO] Executing query to find player by username: said
+[21-10-2025 17:00:06] [INFO] Player found: said
+[21-10-2025 17:00:06] [INFO] New game created with ID: 8
+[21-10-2025 17:00:06] [INFO] User said registered to game 8
+[21-10-2025 17:00:06] [INFO] Game created by host said with ID: 8
+[21-10-2025 17:00:06] [INFO] Encrypted data sent to client.
+[21-10-2025 17:00:06] [INFO] Request received: SEND_INVITATION from said
+[21-10-2025 17:00:06] [INFO] Executing query to find player by username: null
+[21-10-2025 17:00:06] [WARN] No player found with username: null
+[21-10-2025 17:00:06] [WARN] Invitee not found for invitation: null
+[21-10-2025 17:00:06] [INFO] Sent message to sac: {"notificationType":"GAME_INVITATION","payload":{"inviterUsername":"said","gameId":0}}
+[21-10-2025 17:01:01] [INFO] Client sac disconnected.
+[21-10-2025 17:01:01] [INFO] User state updated for sac to offline
+[21-10-2025 17:01:01] [INFO] Executing query to find player by username: sac
+[21-10-2025 17:01:01] [INFO] Player found: sac
+[21-10-2025 17:01:01] [WARN] Attempted to remove non-existent UDP connection for player ID: 4
+[21-10-2025 17:01:07] [INFO] Client said disconnected.
+[21-10-2025 17:01:07] [INFO] User state updated for said to offline
+[21-10-2025 17:01:07] [INFO] Executing query to find player by username: said
+[21-10-2025 17:01:07] [INFO] Player found: said
+[21-10-2025 17:01:07] [WARN] Attempted to remove non-existent UDP connection for player ID: 1
