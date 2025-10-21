@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -40,6 +41,7 @@ public class TcpService {
     private final ManageLogs manageLogs = new ManageLogs();
     private final GenerateAES generateAES = new GenerateAES();
     private static final encryptData aes = new encryptData();
+    private Map<String, InetAddress> userTCPConnect = new ConcurrentHashMap<>();
     private static final MailService mailService = new MailService("liuxeeuu@gmail.com", "mzqw uncm sirt ksbu");
 
     /**
@@ -55,26 +57,32 @@ public class TcpService {
 
     /**
      * Sends a JSON-serialized message to a specific user if they are connected.
-     * Looks up the user's output stream from the connectedClients map and sends the payload.
-     * If the send fails, it assumes the client has disconnected and removes them from the map.
+     * Looks up the user's output stream from the connectedClients map and sends the
+     * payload.
+     * If the send fails, it assumes the client has disconnected and removes them
+     * from the map.
      *
      * @param username The username of the recipient.
      * @param payload  The object to be sent as the message payload.
      */
     private void sendMessageToUser(String username, Object payload) {
+        encryptData encryptSend = new encryptData();
         OutputStream out = connectedClients.get(username);
         if (out != null) {
             try {
                 String jsonResponse = new Gson().toJson(payload) + "\n";
-                out.write(jsonResponse.getBytes());
+                String encripyData = encryptSend.encrypt(jsonResponse);
+                out.write(encripyData.getBytes());
                 out.flush();
                 manageLogs.saveLog("INFO", "Sent message to " + username + ": " + jsonResponse.trim());
             } catch (IOException e) {
-                manageLogs.saveLog("ERROR", "Failed to send message to " + username + ", removing from connected clients: " + e.getMessage());
+                manageLogs.saveLog("ERROR", "Failed to send message to " + username
+                        + ", removing from connected clients: " + e.getMessage());
                 connectedClients.remove(username);
             }
         } else {
-            manageLogs.saveLog("WARN", "Could not send message: User " + username + " not found among connected clients.");
+            manageLogs.saveLog("WARN",
+                    "Could not send message: User " + username + " not found among connected clients.");
         }
     }
 
@@ -133,54 +141,60 @@ public class TcpService {
 
                         String decryptedLine = aes.decrypt(encryptedLine);
                         if (decryptedLine == null) {
-                            manageLogs.saveLog("WARN", "Failed to decrypt message from client " + (username != null ? username : "unknown user") + ". Skipping request.");
+                            manageLogs.saveLog("WARN", "Failed to decrypt message from client "
+                                    + (username != null ? username : "unknown user") + ". Skipping request.");
                             continue;
                         }
 
                         Request req = gson.fromJson(decryptedLine, Request.class);
-                        manageLogs.saveLog("INFO", "Request received: " + req.getType() + " from " + (username != null ? username : "unknown user"));
+                        manageLogs.saveLog("INFO", "Request received: " + req.getType() + " from "
+                                + (username != null ? username : "unknown user"));
                         switch (req.getType()) {
 
                             /**
                              * @Register Case
                              * 
-                             * use the mail service to send the random
-                             * code for the user.
+                             *           use the mail service to send the random
+                             *           code for the user.
                              */
                             case "register":
                                 try {
                                     System.out.println("REQUEST TYPE: REGISTER");
-                                    RequestPayload requestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    RequestPayload requestPayload = gson.fromJson(gson.toJson(req.getPayload()),
+                                            RequestPayload.class);
                                     RegisterDataDto registerDataDto = new RegisterDataDto();
                                     registerDataDto.username = requestPayload.username;
                                     registerDataDto.password = requestPayload.password;
                                     registerDataDto.email = requestPayload.email;
 
                                     mailService.generateAndSend(requestPayload.email, 300, registerDataDto);
-                                    manageLogs.saveLog("INFO", "Verification code sended for " + registerDataDto.username);
-                                    RegisterResponseDTO register = new RegisterResponseDTO(true, "register completed succesfully");
+                                    manageLogs.saveLog("INFO",
+                                            "Verification code sended for " + registerDataDto.username);
+                                    RegisterResponseDTO register = new RegisterResponseDTO(true,
+                                            "register completed succesfully");
                                     String jsonResponse = gson.toJson(register) + "\n";
                                     sendEncryptedData(out, jsonResponse);
                                 } catch (Exception e) {
                                     manageLogs.saveLog("INFO", "Verification code Error " + e.getMessage());
-                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
+                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false,
+                                            "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
                                     sendEncryptedData(out, jsonError);
                                 }
                                 break;
 
-
                             /**
                              * @Login Case
                              * 
-                             * get the username and password from the user to
-                             * do login.
+                             *        get the username and password from the user to
+                             *        do login.
                              */
                             case "login":
                                 try {
                                     String message;
                                     System.out.println("REQUEST TYPE: LOGIN");
-                                    RequestPayload loginRequestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    RequestPayload loginRequestPayload = gson.fromJson(gson.toJson(req.getPayload()),
+                                            RequestPayload.class);
                                     if (loginRequestPayload == null || loginRequestPayload.username == null) {
                                         throw new IllegalArgumentException("Invalid payload: Username is missing");
                                     }
@@ -190,34 +204,37 @@ public class TcpService {
                                         username = loginRequestPayload.username;
                                         userService.updateUserState(username, "online");
                                         connectedClients.put(username, out);
-                                        manageLogs.saveLog("INFO", "User " + username + " logged in and added to connected clients.");
+                                        manageLogs.saveLog("INFO",
+                                                "User " + username + " logged in and added to connected clients.");
                                     } else {
                                         message = "Invalid credentials";
                                     }
-                                    
+
                                     Player player = userService.getByUsername(username);
-                                    LoginResponseDTO response = new LoginResponseDTO(success, message, player.getUserId());
+                                    LoginResponseDTO response = new LoginResponseDTO(success, message,
+                                            player.getUserId());
                                     String jsonResponse = gson.toJson(response) + "\n";
                                     sendEncryptedData(out, jsonResponse);
                                 } catch (JsonSyntaxException | IllegalArgumentException e) {
                                     manageLogs.saveLog("ERROR", "Login error: " + e.getMessage());
-                                    LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage(), 0);
+                                    LoginResponseDTO errorResponse = new LoginResponseDTO(false,
+                                            "Error: " + e.getMessage(), 0);
                                     String jsonError = gson.toJson(errorResponse) + "\n";
                                     sendEncryptedData(out, jsonError);
                                 }
                                 break;
 
-
                             /**
                              * @ VerifyCode Case
                              * 
-                             * get the code from the client and use the mailService to 
+                             * get the code from the client and use the mailService to
                              * validate the input and register the user into the database.
                              */
                             case "verify_code":
                                 try {
                                     System.out.println("REQUEST TYPE: VERIDY CODE");
-                                    RequestPayload codeRequestPayload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    RequestPayload codeRequestPayload = gson.fromJson(gson.toJson(req.getPayload()),
+                                            RequestPayload.class);
                                     CodeDataDto codeDataDto = new CodeDataDto();
                                     codeDataDto.code = codeRequestPayload.code;
                                     codeDataDto.email = codeRequestPayload.email;
@@ -225,36 +242,38 @@ public class TcpService {
                                     System.out.println(codeDataDto.code + " " + codeDataDto.email);
 
                                     boolean exists = mailService.verifyCode(codeDataDto.email, codeDataDto.code);
-                                    if (exists){
+                                    if (exists) {
                                         RegisterDataDto registerDataDto = mailService.getUserPayload(codeDataDto.code);
                                         RequestPayload requestPayload = new RequestPayload();
                                         requestPayload.username = registerDataDto.username;
                                         requestPayload.password = registerDataDto.password;
                                         userService.registerUser(requestPayload);
                                         manageLogs.saveLog("ERROR", "Registration User");
-                                        CodeResponseDto codeResponseDto = new CodeResponseDto(true, "user " + 
-                                        requestPayload.username + " created successfully");
+                                        CodeResponseDto codeResponseDto = new CodeResponseDto(true, "user " +
+                                                requestPayload.username + " created successfully");
                                         String jsonResponse = gson.toJson(codeResponseDto) + "\n";
                                         sendEncryptedData(out, jsonResponse);
                                     }
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Registration User Error: " + e.getMessage());
-                                    LoginResponseDTO errorResponse = new LoginResponseDTO(false, "Error: " + e.getMessage(), 0);
+                                    LoginResponseDTO errorResponse = new LoginResponseDTO(false,
+                                            "Error: " + e.getMessage(), 0);
                                     String jsonError = gson.toJson(errorResponse) + "\n";
                                     sendEncryptedData(out, jsonError);
                                 }
                                 break;
 
-
                             case "get_online_users":
                                 try {
                                     List<String> onlineUsers = userService.getOnlineUsers();
-                                    ConnectedUsersResponseDTO response = new ConnectedUsersResponseDTO(onlineUsers.toArray(new String[0]));
+                                    ConnectedUsersResponseDTO response = new ConnectedUsersResponseDTO(
+                                            onlineUsers.toArray(new String[0]));
                                     String jsonResponse = gson.toJson(response) + "\n";
                                     sendEncryptedData(out, jsonResponse);
                                 } catch (RuntimeException e) {
                                     manageLogs.saveLog("ERROR", "Error getting online users: " + e.getMessage());
-                                    ConnectedUsersResponseDTO errorResponse = new ConnectedUsersResponseDTO(new String[0]);
+                                    ConnectedUsersResponseDTO errorResponse = new ConnectedUsersResponseDTO(
+                                            new String[0]);
                                     String jsonError = gson.toJson(errorResponse) + "\n";
                                     sendEncryptedData(out, jsonError);
                                 }
@@ -262,14 +281,17 @@ public class TcpService {
 
                             case "create_game":
                                 try {
-                                    if (username == null) throw new IllegalArgumentException("Must be logged in");
+                                    if (username == null)
+                                        throw new IllegalArgumentException("Must be logged in");
                                     GameDTO game = roomService.createGameAndRegisterHost(username);
-                                    RegisterResponseDTO response = new RegisterResponseDTO(true, "Game created: " + game.getGame_id());
+                                    RegisterResponseDTO response = new RegisterResponseDTO(true,
+                                            "Game created: " + game.getGame_id());
                                     String jsonResponse = gson.toJson(response) + "\n";
                                     sendEncryptedData(out, jsonResponse);
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error creating game: " + e.getMessage());
-                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
+                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false,
+                                            "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
                                     sendEncryptedData(out, jsonError);
                                 }
@@ -281,7 +303,8 @@ public class TcpService {
                                     sendEncryptedData(out, jsonResponse);
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error getting active games: " + e.getMessage());
-                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
+                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false,
+                                            "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
                                     sendEncryptedData(out, jsonError);
                                 }
@@ -290,10 +313,14 @@ public class TcpService {
                                 try {
                                     if (username == null)
                                         throw new IllegalStateException("User must be logged in to send invitations.");
-                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()), InvitationPayload.class);
-                                    roomService.createInvitation(invPayload.getGameId(), invPayload.getInvitedUsername());
-                                    InvitationPayload notificationPayload = new InvitationPayload(username, invPayload.getInvitedUsername(), invPayload.getGameId());
-                                    sendMessageToUser(invPayload.getInvitedUsername(), new NotificationDTO("GAME_INVITATION", notificationPayload));
+                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()),
+                                            InvitationPayload.class);
+                                    roomService.createInvitation(invPayload.getGameId(),
+                                            invPayload.getInvitedUsername());
+                                    InvitationPayload notificationPayload = new InvitationPayload(username,
+                                            invPayload.getInvitedUsername(), invPayload.getGameId());
+                                    sendMessageToUser(req.getPayload().username,
+                                            new NotificationDTO("GAME_INVITATION", notificationPayload));
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error processing SEND_INVITATION: " + e.getMessage());
                                 }
@@ -302,10 +329,13 @@ public class TcpService {
                                 try {
                                     if (username == null)
                                         throw new IllegalStateException("User must be logged in to deny invitations.");
-                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()), InvitationPayload.class);
+                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()),
+                                            InvitationPayload.class);
                                     roomService.respondToInvitation(invPayload.getGameId(), username, false);
-                                    Map<String, String> payload = Map.of("deniedBy", username, "gameId", String.valueOf(invPayload.getGameId()));
-                                    sendMessageToUser(invPayload.getInviterUsername(), new NotificationDTO("INVITATION_DENIED", payload));
+                                    Map<String, String> payload = Map.of("deniedBy", username, "gameId",
+                                            String.valueOf(invPayload.getGameId()));
+                                    sendMessageToUser(invPayload.getInviterUsername(),
+                                            new NotificationDTO("INVITATION_DENIED", payload));
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error processing DENY_INVITATION: " + e.getMessage());
                                 }
@@ -313,8 +343,10 @@ public class TcpService {
                             case "ACCEPT_INVITATION":
                                 try {
                                     if (username == null)
-                                        throw new IllegalStateException("User must be logged in to accept invitations.");
-                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()), InvitationPayload.class);
+                                        throw new IllegalStateException(
+                                                "User must be logged in to accept invitations.");
+                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()),
+                                            InvitationPayload.class);
                                     String inviterUsername = invPayload.getInviterUsername();
                                     int gameId = invPayload.getGameId();
 
@@ -327,21 +359,26 @@ public class TcpService {
                                     Player invitee = queries.findPlayerByUsername(username);
 
                                     if (inviter != null && invitee != null) {
-                                        GameSession session = new GameSession(gameId, inviter.getUserId(), invitee.getUserId());
+                                        GameSession session = new GameSession(gameId, inviter.getUserId(),
+                                                invitee.getUserId());
                                         activeGameSessions.put(gameId, session);
                                         manageLogs.saveLog("INFO", "Game session created for game ID: " + gameId);
                                     } else {
-                                        manageLogs.saveLog("ERROR", "Could not create game session for game ID: " + gameId + ". One or more players not found.");
+                                        manageLogs.saveLog("ERROR", "Could not create game session for game ID: "
+                                                + gameId + ". One or more players not found.");
                                     }
 
-                                    Map<String, String> payload = Map.of("acceptedBy", username, "gameId", String.valueOf(gameId));
+                                    Map<String, String> payload = Map.of("acceptedBy", username, "gameId",
+                                            String.valueOf(gameId));
                                     NotificationDTO notification = new NotificationDTO("INVITATION_ACCEPTED", payload);
 
                                     sendMessageToUser(inviterUsername, notification);
                                     sendMessageToUser(username, notification);
                                 } catch (Exception e) {
-                                    manageLogs.saveLog("ERROR", "Error processing ACCEPT_INVITATION: " + e.getMessage());
-                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
+                                    manageLogs.saveLog("ERROR",
+                                            "Error processing ACCEPT_INVITATION: " + e.getMessage());
+                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false,
+                                            "Error: " + e.getMessage());
                                     String jsonError = gson.toJson(errorResponse) + "\n";
                                     out.write(jsonError.getBytes());
                                     out.flush();
@@ -374,7 +411,6 @@ public class TcpService {
             }).start();
         }
     }
-
 
     public void sendEncryptedData(OutputStream out, String data) {
         try {
