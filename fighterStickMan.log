@@ -764,3 +764,81 @@
 [21-10-2025 19:35:02] [INFO] Executing query to find player by username: cgaleano
 [21-10-2025 19:35:02] [INFO] Player found: cgaleano
 [21-10-2025 19:35:02] [WARN] Attempted to remove non-existent UDP connection for player ID: 1
+[21-10-2025 19:57:49] [INFO] UDP service is now listening on port 9876
+[21-10-2025 19:57:49] [INFO] TCP socket: listening in port 5000
+[21-10-2025 19:58:16] [INFO] Client connected: /127.0.0.1
+[21-10-2025 19:58:16] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 19:58:18] [INFO] Client connected: /127.0.0.1
+[21-10-2025 19:58:18] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 19:58:35] [INFO] Request received: login from unknown user
+[21-10-2025 19:58:35] [INFO] Login attempt for user: cgaleano
+[21-10-2025 19:58:37] [INFO] Executing query to find player by username: cgaleano
+[21-10-2025 19:58:37] [INFO] Player found: cgaleano
+[21-10-2025 19:58:38] [INFO] Login successful for user: cgaleano
+[21-10-2025 19:58:38] [INFO] User state updated for cgaleano to offline
+[21-10-2025 19:58:38] [INFO] User cgaleano logged in and added to connected clients.
+[21-10-2025 19:58:38] [INFO] Encrypted data sent to client.
+[21-10-2025 19:58:48] [INFO] Request received: login from unknown user
+[21-10-2025 19:58:48] [INFO] Login attempt for user: said
+[21-10-2025 19:58:48] [INFO] Executing query to find player by username: said
+[21-10-2025 19:58:48] [INFO] Player found: said
+[21-10-2025 19:58:48] [INFO] Login successful for user: said
+[21-10-2025 19:58:48] [INFO] User state updated for said to offline
+[21-10-2025 19:58:48] [INFO] User said logged in and added to connected clients.
+[21-10-2025 19:58:48] [INFO] Encrypted data sent to client.
+[21-10-2025 19:58:51] [INFO] Request received: get_online_users from cgaleano
+[21-10-2025 19:58:51] [INFO] Fetching online users
+[21-10-2025 19:58:51] [INFO] Found 2 online users
+[21-10-2025 19:58:51] [INFO] Encrypted data sent to client.
+[21-10-2025 19:58:53] [INFO] Request received: get_online_users from said
+[21-10-2025 19:58:53] [INFO] Fetching online users
+[21-10-2025 19:58:53] [INFO] Found 2 online users
+[21-10-2025 19:58:53] [INFO] Encrypted data sent to client.
+[21-10-2025 19:58:56] [INFO] Request received: create_game from cgaleano
+[21-10-2025 19:58:56] [INFO] Executing query to find player by username: cgaleano
+[21-10-2025 19:58:56] [INFO] Player found: cgaleano
+[21-10-2025 19:58:56] [INFO] New game created with ID: 10
+[21-10-2025 19:58:56] [INFO] User cgaleano registered to game 10
+[21-10-2025 19:58:56] [INFO] Game created by host cgaleano with ID: 10
+[21-10-2025 19:58:56] [INFO] Encrypted data sent to client.
+[21-10-2025 19:58:56] [INFO] Request received: SEND_INVITATION from cgaleano
+[21-10-2025 19:58:56] [INFO] Executing query to find player by username: said
+[21-10-2025 19:58:56] [INFO] Player found: said
+[21-10-2025 19:58:56] [INFO] Finding game by ID: 10
+[21-10-2025 19:58:56] [INFO] User said registered to game 10
+[21-10-2025 19:58:56] [INFO] Invitation sent to said for game 10
+[21-10-2025 19:58:56] [INFO] Sent message to said: {"notificationType":"GAME_INVITATION","payload":{"inviterUsername":"cgaleano","invitedUsername":"said","gameId":10}}
+[21-10-2025 19:59:01] [INFO] Request received: DENY_INVITATION from said
+[21-10-2025 19:59:01] [INFO] Finding invitation for game 10 and user said
+[21-10-2025 19:59:01] [INFO] Invitation deleted for game 10
+[21-10-2025 19:59:01] [INFO] User said declined invitation for game 10
+[21-10-2025 19:59:01] [INFO] Sent message to cgaleano: {"notificationType":"INVITATION_DENIED","payload":{"deniedBy":"said","gameId":"10"}}
+[21-10-2025 20:01:00] [INFO] Request received: create_game from said
+[21-10-2025 20:01:00] [INFO] Executing query to find player by username: said
+[21-10-2025 20:01:00] [INFO] Player found: said
+[21-10-2025 20:01:00] [INFO] New game created with ID: 11
+[21-10-2025 20:01:00] [INFO] User said registered to game 11
+[21-10-2025 20:01:00] [INFO] Game created by host said with ID: 11
+[21-10-2025 20:01:00] [INFO] Encrypted data sent to client.
+[21-10-2025 20:01:00] [INFO] Request received: SEND_INVITATION from said
+[21-10-2025 20:01:00] [INFO] Executing query to find player by username: cgaleano
+[21-10-2025 20:01:00] [INFO] Player found: cgaleano
+[21-10-2025 20:01:00] [INFO] Finding game by ID: 11
+[21-10-2025 20:01:00] [INFO] User cgaleano registered to game 11
+[21-10-2025 20:01:00] [INFO] Invitation sent to cgaleano for game 11
+[21-10-2025 20:01:00] [INFO] Sent message to cgaleano: {"notificationType":"GAME_INVITATION","payload":{"inviterUsername":"said","invitedUsername":"cgaleano","gameId":11}}
+[21-10-2025 20:01:04] [INFO] Request received: DENY_INVITATION from cgaleano
+[21-10-2025 20:01:04] [INFO] Finding invitation for game 11 and user cgaleano
+[21-10-2025 20:01:04] [INFO] Invitation deleted for game 11
+[21-10-2025 20:01:04] [INFO] User cgaleano declined invitation for game 11
+[21-10-2025 20:01:04] [INFO] Sent message to said: {"notificationType":"INVITATION_DENIED","payload":{"deniedBy":"cgaleano","gameId":"11"}}
+[21-10-2025 20:02:36] [INFO] Client cgaleano disconnected.
+[21-10-2025 20:02:36] [INFO] User state updated for cgaleano to offline
+[21-10-2025 20:02:36] [INFO] Executing query to find player by username: cgaleano
+[21-10-2025 20:02:36] [INFO] Player found: cgaleano
+[21-10-2025 20:02:36] [WARN] Attempted to remove non-existent UDP connection for player ID: 1
+[21-10-2025 20:02:38] [INFO] Client said disconnected.
+[21-10-2025 20:02:38] [INFO] User state updated for said to offline
+[21-10-2025 20:02:38] [INFO] Executing query to find player by username: said
+[21-10-2025 20:02:38] [INFO] Player found: said
+[21-10-2025 20:02:38] [WARN] Attempted to remove non-existent UDP connection for player ID: 2
