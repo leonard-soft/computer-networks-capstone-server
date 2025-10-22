@@ -1046,4 +1046,106 @@
 [21-10-2025 22:04:13] [INFO] Request received: GET_PLAYER_RANK from unknown user
 [21-10-2025 22:04:13] [WARN] Unknown request type: GET_PLAYER_RANK
 >>>>>>> db3b2fd (feat: ranking test)
+<<<<<<< HEAD
 >>>>>>> c17a604 (feat: ranking test)
+=======
+[21-10-2025 22:22:27] [INFO] UDP service is now listening on port 9876
+[21-10-2025 22:22:27] [INFO] TCP socket: listening in port 5000
+[21-10-2025 22:22:32] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:22:32] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:22:43] [INFO] Request received: login from unknown user
+[21-10-2025 22:22:43] [INFO] Login attempt for user: leonardo
+[21-10-2025 22:22:55] [INFO] Executing query to find player by username: leonardo
+[21-10-2025 22:22:56] [INFO] Player found: leonardo
+[21-10-2025 22:22:57] [INFO] Login successful for user: leonardo
+[21-10-2025 22:22:57] [INFO] User state updated for leonardo to offline
+[21-10-2025 22:22:57] [INFO] User leonardo logged in and added to connected clients.
+[21-10-2025 22:22:57] [INFO] Encrypted data sent to client.
+[21-10-2025 22:22:59] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:22:59] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:22:59] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 22:22:59] [WARN] Unknown request type: GET_PLAYER_RANK
+[21-10-2025 22:23:48] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:23:48] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:23:48] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 22:23:48] [WARN] Unknown request type: GET_PLAYER_RANK
+[21-10-2025 22:23:57] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:23:57] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:23:57] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 22:23:57] [WARN] Unknown request type: GET_PLAYER_RANK
+[21-10-2025 22:24:06] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:24:06] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:24:06] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 22:24:06] [WARN] Unknown request type: GET_PLAYER_RANK
+[21-10-2025 22:24:08] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:24:08] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:24:08] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 22:24:08] [WARN] Unknown request type: GET_PLAYER_RANK
+[21-10-2025 22:24:08] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:24:08] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:24:08] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 22:24:08] [WARN] Unknown request type: GET_PLAYER_RANK
+[21-10-2025 22:24:38] [INFO] UDP service is now listening on port 9876
+[21-10-2025 22:24:38] [INFO] TCP socket: listening in port 5000
+[21-10-2025 22:24:44] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:24:44] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:24:52] [INFO] Request received: login from unknown user
+[21-10-2025 22:24:52] [INFO] Login attempt for user: leonardo
+[21-10-2025 22:25:05] [INFO] Executing query to find player by username: leonardo
+[21-10-2025 22:25:05] [INFO] Player found: leonardo
+[21-10-2025 22:25:06] [INFO] Login successful for user: leonardo
+[21-10-2025 22:25:06] [INFO] User state updated for leonardo to offline
+[21-10-2025 22:25:06] [INFO] User leonardo logged in and added to connected clients.
+[21-10-2025 22:25:06] [INFO] Encrypted data sent to client.
+[21-10-2025 22:25:08] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:25:08] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:25:08] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 22:25:08] [WARN] Unknown request type: GET_PLAYER_RANK
+[21-10-2025 22:36:07] [INFO] UDP service is now listening on port 9876
+[21-10-2025 22:36:07] [INFO] TCP socket: listening in port 5000
+[21-10-2025 22:36:31] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:36:31] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:36:42] [INFO] Request received: login from unknown user
+[21-10-2025 22:36:42] [INFO] Login attempt for user: leonardo
+[21-10-2025 22:36:54] [INFO] Executing query to find player by username: leonardo
+[21-10-2025 22:36:55] [INFO] Player found: leonardo
+[21-10-2025 22:36:56] [INFO] Login successful for user: leonardo
+[21-10-2025 22:36:56] [INFO] User state updated for leonardo to offline
+[21-10-2025 22:36:56] [INFO] User leonardo logged in and added to connected clients.
+[21-10-2025 22:36:56] [INFO] Encrypted data sent to client.
+[21-10-2025 22:36:59] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:36:59] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:36:59] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 22:36:59] [WARN] Unknown request type: GET_PLAYER_RANK
+[21-10-2025 22:39:42] [INFO] UDP service is now listening on port 9876
+[21-10-2025 22:39:43] [INFO] TCP socket: listening in port 5000
+[21-10-2025 22:43:19] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:43:19] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:43:30] [INFO] Request received: login from unknown user
+[21-10-2025 22:43:30] [INFO] Login attempt for user: leonardo
+[21-10-2025 22:43:43] [INFO] Executing query to find player by username: leonardo
+[21-10-2025 22:43:43] [INFO] Player found: leonardo
+[21-10-2025 22:43:44] [INFO] Login successful for user: leonardo
+[21-10-2025 22:43:44] [INFO] User state updated for leonardo to offline
+[21-10-2025 22:43:44] [INFO] User leonardo logged in and added to connected clients.
+[21-10-2025 22:43:44] [INFO] Encrypted data sent to client.
+[21-10-2025 22:43:54] [INFO] Client leonardo disconnected.
+[21-10-2025 22:43:54] [INFO] User state updated for leonardo to offline
+[21-10-2025 22:43:54] [INFO] Executing query to find player by username: leonardo
+[21-10-2025 22:43:54] [INFO] Player found: leonardo
+[21-10-2025 22:43:54] [WARN] Attempted to remove non-existent UDP connection for player ID: 2
+[21-10-2025 22:47:47] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:47:47] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:47:56] [INFO] Request received: login from unknown user
+[21-10-2025 22:47:56] [INFO] Login attempt for user: leonardo
+[21-10-2025 22:47:56] [INFO] Executing query to find player by username: leonardo
+[21-10-2025 22:47:56] [INFO] Player found: leonardo
+[21-10-2025 22:47:57] [INFO] Login successful for user: leonardo
+[21-10-2025 22:47:57] [INFO] User state updated for leonardo to offline
+[21-10-2025 22:47:57] [INFO] User leonardo logged in and added to connected clients.
+[21-10-2025 22:47:57] [INFO] Encrypted data sent to client.
+[21-10-2025 22:47:59] [INFO] Client connected: /127.0.0.1
+[21-10-2025 22:47:59] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 22:47:59] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 22:47:59] [WARN] Unknown request type: GET_PLAYER_RANK
+>>>>>>> c8099d0 (feat: ranking test)
