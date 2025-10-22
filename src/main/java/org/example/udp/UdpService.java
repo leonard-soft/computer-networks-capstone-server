@@ -78,12 +78,11 @@ public class UdpService {
 
 private void processPacket(DataTransferDTO data) {
         GameSession session = findGameSessionByPlayerId(data.getIdPlayer());
-
         if (session == null) {
             manageLogs.saveLog("WARN", "UDP packet from player " + data.getIdPlayer() + " with no active game session.");
             return;
         }
-
+        System.out.println("type " + data.getEventType());
         switch (data.getEventType()) {
             case "PLAYER_JOIN_UDP":
                 manageLogs.saveLog("INFO", "Player " + data.getIdPlayer() + " confirmed join via UDP.");
@@ -111,14 +110,14 @@ private void processPacket(DataTransferDTO data) {
 
                 if (gameOver) {
                     manageLogs.saveLog("INFO", "Game over for game ID: " + session.getGameId());
-                    org.example.tcp.TcpService.activeGameSessions.remove(session.getGameId());
                 }
                 break;
             
             case "UPDATE_USER_VIC":
-                int winnerId = data.getIdPlayer();
+                int winnerId = ((Double) data.getPayload().get("idWinn")).intValue();
                 RankService rankService = new RankService();
                 rankService.updateUserVictories(winnerId);
+                org.example.tcp.TcpService.activeGameSessions.remove(session.getGameId());
                 break;
             default:
                 manageLogs.saveLog("WARN", "Unknown UDP event type: " + data.getEventType());
