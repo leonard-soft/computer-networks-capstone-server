@@ -66,7 +66,6 @@ public class UdpService {
         }
     }
 
-
     private GameSession findGameSessionByPlayerId(int playerId) {
         for (GameSession session : TcpService.activeGameSessions.values()) {
             if (session.getPlayer1Id() == playerId || session.getPlayer2Id() == playerId) {
@@ -148,13 +147,10 @@ private void processPacket(DataTransferDTO data) {
         }
     }
 
-
-
     private void sendToBothPlayers(GameSession session, DataTransferDTO data) {
         sendPacket(data, session.getPlayer1Id());
         sendPacket(data, session.getPlayer2Id());
     }
-
 
     public void savePlayer(PlayerConnection playerConnection) {
         if (playerConnection == null) {
