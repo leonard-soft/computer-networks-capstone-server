@@ -30,7 +30,6 @@ public class UdpService {
 
     public void listen() {
         running = true;
-        System.out.println("Server UDP Run");
         manageLogs.saveLog("INFO", "UDP service is now listening on port 9876");
         byte[] buffer = new byte[4096]; // Buffer for incoming data
 
@@ -66,6 +65,7 @@ public class UdpService {
         }
     }
 
+
     private GameSession findGameSessionByPlayerId(int playerId) {
         for (GameSession session : TcpService.activeGameSessions.values()) {
             if (session.getPlayer1Id() == playerId || session.getPlayer2Id() == playerId) {
@@ -97,7 +97,7 @@ private void processPacket(DataTransferDTO data) {
                 manageLogs.saveLog("INFO", "Player " + data.getIdPlayer() + " attacked in game " + session.getGameId());
                 int targetPlayerId = (data.getIdPlayer() == session.getPlayer1Id()) ? session.getPlayer2Id() : session.getPlayer1Id();
 
-                int damage = 10; // Fixed damage
+                int damage = 2; // Fixed damage
                 boolean gameOver = session.applyDamage(targetPlayerId, damage);
 
                 java.util.Map<String, Object> payload = new java.util.HashMap<>();
@@ -147,10 +147,13 @@ private void processPacket(DataTransferDTO data) {
         }
     }
 
+
+
     private void sendToBothPlayers(GameSession session, DataTransferDTO data) {
         sendPacket(data, session.getPlayer1Id());
         sendPacket(data, session.getPlayer2Id());
     }
+
 
     public void savePlayer(PlayerConnection playerConnection) {
         if (playerConnection == null) {
