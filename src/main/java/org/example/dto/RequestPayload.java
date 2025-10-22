@@ -6,5 +6,6 @@ public class RequestPayload {
     public String email;
     public String code;
     public int idGame;
+    public int gameId;
     public int playerId;
 }

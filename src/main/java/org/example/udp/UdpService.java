@@ -30,6 +30,7 @@ public class UdpService {
 
     public void listen() {
         running = true;
+        System.out.println("Server UDP Run");
         manageLogs.saveLog("INFO", "UDP service is now listening on port 9876");
         byte[] buffer = new byte[4096]; // Buffer for incoming data
 
@@ -49,6 +50,7 @@ public class UdpService {
                         if (!connections.containsKey(data.getIdPlayer())) {
                             PlayerConnection playerConn = new PlayerConnection(data.getIdPlayer(), packet.getAddress(), packet.getPort());
                             savePlayer(playerConn);
+                            System.out.println("IP: "+ packet.getAddress());
                         }
                         // Process the received data
                         processPacket(data);
