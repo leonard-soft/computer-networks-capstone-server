@@ -7,4 +7,5 @@ public class RequestPayload {
     public String code;
     public int idGame;
     public int gameId;
+    public int playerId;
 }
