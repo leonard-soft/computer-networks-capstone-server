@@ -377,10 +377,20 @@ public class TcpService {
 
                                     Map<String, String> notificationPayload = Map.of("acceptedBy", username, "gameId",
                                             String.valueOf(gameId));
+<<<<<<< HEAD
                                     NotificationDTO notification = new NotificationDTO("INVITATION_ACCEPTED", notificationPayload);
+=======
+                                    NotificationDTO acceptanceNotification = new NotificationDTO("INVITATION_ACCEPTED", payload);
+                                    sendMessageToUser(inviterUsername, acceptanceNotification);
+                                    sendMessageToUser(username, acceptanceNotification);
 
-                                    sendMessageToUser(inviterUsername, notification);
-                                    sendMessageToUser(username, notification);
+                                    // Notify both players that the game is starting
+                                    Map<String, String> gameStartPayload = Map.of("gameId", String.valueOf(gameId));
+                                    NotificationDTO gameStartedNotification = new NotificationDTO("GAME_STARTED", gameStartPayload);
+                                    sendMessageToUser(inviterUsername, gameStartedNotification);
+                                    sendMessageToUser(username, gameStartedNotification);
+>>>>>>> 22fd71e (fix: generate game a send notification)
+
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR",
                                             "Error processing ACCEPT_INVITATION: " + e.getMessage());

@@ -2,10 +2,8 @@ package org.example.udp;
 
 import com.google.gson.Gson;
 import org.example.dto.*;
-import org.example.encrypt.GenerateAES;
 import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
-import org.example.service.RoomService;
 import org.example.tcp.TcpService;
 
 import java.io.*;
@@ -13,8 +11,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UdpService {
@@ -22,8 +18,6 @@ public class UdpService {
     private final DatagramSocket socket;
     private final ManageLogs manageLogs;
     private final ConcurrentHashMap<Integer, PlayerConnection> connections = new ConcurrentHashMap<>();
-    private final GenerateAES aes;
-    private final RoomService roomService;
     private final encryptData aesEncryptor;
     private final Gson gson = new Gson();
     private boolean running;
@@ -31,8 +25,6 @@ public class UdpService {
     public UdpService() throws SocketException {
         this.socket = new DatagramSocket(9876);
         this.manageLogs = new ManageLogs();
-        this.aes = new GenerateAES();
-        this.roomService = new RoomService();
         this.aesEncryptor = new encryptData();
     }
 
@@ -82,7 +74,7 @@ public class UdpService {
         return null;
     }
 
-    private void processPacket(DataTransferDTO data) {
+private void processPacket(DataTransferDTO data) {
         GameSession session = findGameSessionByPlayerId(data.getIdPlayer());
 
         if (session == null) {
@@ -91,6 +83,10 @@ public class UdpService {
         }
 
         switch (data.getEventType()) {
+            case "PLAYER_JOIN_UDP":
+                manageLogs.saveLog("INFO", "Player " + data.getIdPlayer() + " confirmed join via UDP.");
+                break;
+
             case "PLAYER_MOVE":
                 int otherPlayerId = (data.getIdPlayer() == session.getPlayer1Id()) ? session.getPlayer2Id() : session.getPlayer1Id();
                 sendPacket(data, otherPlayerId);
@@ -103,7 +99,7 @@ public class UdpService {
                 int damage = 10; // Fixed damage
                 boolean gameOver = session.applyDamage(targetPlayerId, damage);
 
-                Map<String, Object> payload = new HashMap<>();
+                java.util.Map<String, Object> payload = new java.util.HashMap<>();
                 payload.put("targetId", targetPlayerId);
                 payload.put("newHealth", (targetPlayerId == session.getPlayer1Id()) ? session.getPlayer1Health() : session.getPlayer2Health());
                 payload.put("isGameOver", gameOver);
@@ -113,7 +109,7 @@ public class UdpService {
 
                 if (gameOver) {
                     manageLogs.saveLog("INFO", "Game over for game ID: " + session.getGameId());
-                    TcpService.activeGameSessions.remove(session.getGameId());
+                    org.example.tcp.TcpService.activeGameSessions.remove(session.getGameId());
                 }
                 break;
 
