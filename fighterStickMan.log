@@ -1,0 +1,24 @@
+[21-10-2025 23:36:11] [INFO] UDP service is now listening on port 9876
+[21-10-2025 23:36:11] [INFO] TCP socket: listening in port 5000
+[21-10-2025 23:36:14] [INFO] Client connected: /127.0.0.1
+[21-10-2025 23:36:14] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 23:36:23] [INFO] Request received: login from unknown user
+[21-10-2025 23:36:23] [INFO] Login attempt for user: leonardo
+[21-10-2025 23:36:36] [INFO] Executing query to find player by username: leonardo
+[21-10-2025 23:36:37] [INFO] Player found: leonardo
+[21-10-2025 23:36:38] [INFO] Login successful for user: leonardo
+[21-10-2025 23:36:38] [INFO] User state updated for leonardo to offline
+[21-10-2025 23:36:38] [INFO] User leonardo logged in and added to connected clients.
+[21-10-2025 23:36:38] [INFO] Encrypted data sent to client.
+[21-10-2025 23:36:42] [INFO] Client connected: /127.0.0.1
+[21-10-2025 23:36:42] [INFO] Sent server public key to client: /127.0.0.1
+[21-10-2025 23:36:42] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[21-10-2025 23:36:42] [INFO] Encrypted data sent to client.
+[21-10-2025 23:36:46] [INFO] Request received: get_online_users from leonardo
+[21-10-2025 23:36:46] [INFO] Fetching online users
+[21-10-2025 23:36:46] [INFO] Found 1 online users
+[21-10-2025 23:36:46] [INFO] Encrypted data sent to client.
+[21-10-2025 23:36:50] [INFO] Client leonardo disconnected.
+[21-10-2025 23:36:50] [INFO] Executing query to find player by username: leonardo
+[21-10-2025 23:36:50] [INFO] Player found: leonardo
+[21-10-2025 23:36:50] [WARN] Attempted to remove non-existent UDP connection for player ID: 2
