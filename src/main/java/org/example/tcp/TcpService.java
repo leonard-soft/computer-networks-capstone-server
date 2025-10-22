@@ -313,14 +313,19 @@ public class TcpService {
                                 try {
                                     if (username == null)
                                         throw new IllegalStateException("User must be logged in to send invitations.");
-                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()),
-                                            InvitationPayload.class);
-                                    roomService.createInvitation(invPayload.getGameId(),
-                                            invPayload.getInvitedUsername());
-                                    InvitationPayload notificationPayload = new InvitationPayload(username,
-                                            invPayload.getInvitedUsername(), invPayload.getGameId());
-                                    sendMessageToUser(req.getPayload().username,
-                                            new NotificationDTO("GAME_INVITATION", notificationPayload));
+
+                                    RequestPayload payload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    String invitedUsername = payload.username;
+                                    int gameId = payload.idGame != 0 ? payload.idGame : payload.gameId;
+
+                                    if (invitedUsername == null) {
+                                        throw new IllegalArgumentException("Invited username is missing from payload.");
+                                    }
+                                    roomService.createInvitation(gameId, invitedUsername);
+
+                                    InvitationPayload notificationPayload = new InvitationPayload(username, invitedUsername, gameId);
+
+                                    sendMessageToUser(invitedUsername, new NotificationDTO("GAME_INVITATION", notificationPayload));
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error processing SEND_INVITATION: " + e.getMessage());
                                 }
