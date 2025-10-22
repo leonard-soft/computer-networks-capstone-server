@@ -3410,3 +3410,670 @@
 [22-10-2025 02:02:50] [INFO] Executing query to find player by username: sac
 [22-10-2025 02:02:50] [INFO] Player found: sac
 [22-10-2025 02:02:50] [INFO] Player UDP connection details removed for ID: 4
+[22-10-2025 02:40:33] [INFO] UDP service is now listening on port 9876
+[22-10-2025 02:40:33] [INFO] TCP socket: listening in port 5000
+[22-10-2025 02:41:46] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:41:46] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:42:37] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:42:37] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:42:52] [INFO] Request received: login from unknown user
+[22-10-2025 02:42:52] [INFO] Login attempt for user: said
+[22-10-2025 02:42:56] [INFO] Executing query to find player by username: said
+[22-10-2025 02:42:57] [INFO] Player found: said
+[22-10-2025 02:42:57] [INFO] Login successful for user: said
+[22-10-2025 02:42:57] [INFO] User state updated for said to offline
+[22-10-2025 02:42:57] [INFO] User said logged in and added to connected clients.
+[22-10-2025 02:42:57] [INFO] Encrypted data sent to client.
+[22-10-2025 02:42:59] [INFO] Request received: login from unknown user
+[22-10-2025 02:42:59] [INFO] Login attempt for user: sac
+[22-10-2025 02:42:59] [INFO] Executing query to find player by username: sac
+[22-10-2025 02:42:59] [INFO] Player found: sac
+[22-10-2025 02:42:59] [INFO] Login successful for user: sac
+[22-10-2025 02:42:59] [INFO] User state updated for sac to offline
+[22-10-2025 02:42:59] [INFO] User sac logged in and added to connected clients.
+[22-10-2025 02:42:59] [INFO] Encrypted data sent to client.
+[22-10-2025 02:43:01] [INFO] Request received: get_online_users from said
+[22-10-2025 02:43:01] [INFO] Fetching online users
+[22-10-2025 02:43:01] [INFO] Found 2 online users
+[22-10-2025 02:43:01] [INFO] Encrypted data sent to client.
+[22-10-2025 02:43:02] [INFO] Request received: get_online_users from sac
+[22-10-2025 02:43:02] [INFO] Fetching online users
+[22-10-2025 02:43:02] [INFO] Found 2 online users
+[22-10-2025 02:43:02] [INFO] Encrypted data sent to client.
+[22-10-2025 02:43:04] [INFO] Request received: create_game from said
+[22-10-2025 02:43:04] [INFO] Executing query to find player by username: said
+[22-10-2025 02:43:04] [INFO] Player found: said
+[22-10-2025 02:43:04] [INFO] New game created with ID: 50
+[22-10-2025 02:43:04] [INFO] User said registered to game 50
+[22-10-2025 02:43:04] [INFO] Game created by host said with ID: 50
+[22-10-2025 02:43:04] [INFO] Encrypted data sent to client.
+[22-10-2025 02:43:04] [INFO] Request received: SEND_INVITATION from said
+[22-10-2025 02:43:04] [INFO] Executing query to find player by username: sac
+[22-10-2025 02:43:04] [INFO] Player found: sac
+[22-10-2025 02:43:04] [INFO] Finding game by ID: 50
+[22-10-2025 02:43:04] [INFO] User sac registered to game 50
+[22-10-2025 02:43:04] [INFO] Invitation sent to sac for game 50
+[22-10-2025 02:43:04] [INFO] Sent message to sac: {"notificationType":"GAME_INVITATION","payload":{"inviterUsername":"said","invitedUsername":"sac","gameId":50}}
+[22-10-2025 02:43:07] [INFO] Request received: ACCEPT_INVITATION from sac
+[22-10-2025 02:43:07] [INFO] Finding invitation for game 50 and user sac
+[22-10-2025 02:43:07] [INFO] Invitation updated for game 50
+[22-10-2025 02:43:07] [INFO] User sac accepted invitation for game 50
+[22-10-2025 02:43:07] [INFO] Game status updated for game 50 to true
+[22-10-2025 02:43:07] [INFO] Game 50 has been started.
+[22-10-2025 02:43:07] [INFO] Executing query to find player by username: said
+[22-10-2025 02:43:07] [INFO] Player found: said
+[22-10-2025 02:43:07] [INFO] Executing query to find player by username: sac
+[22-10-2025 02:43:07] [INFO] Player found: sac
+[22-10-2025 02:43:07] [INFO] Game session created for game ID: 50
+[22-10-2025 02:43:07] [INFO] Sent message to said: {"notificationType":"INVITATION_ACCEPTED","payload":{"gameId":"50","acceptedBy":"sac"}}
+[22-10-2025 02:43:07] [INFO] Sent message to sac: {"notificationType":"INVITATION_ACCEPTED","payload":{"gameId":"50","acceptedBy":"sac"}}
+[22-10-2025 02:43:08] [INFO] Player UDP connection details saved for ID: 1
+[22-10-2025 02:43:08] [INFO] Player 1 confirmed join via UDP.
+[22-10-2025 02:43:08] [INFO] Player UDP connection details saved for ID: 4
+[22-10-2025 02:43:08] [INFO] Player 4 confirmed join via UDP.
+[22-10-2025 02:43:08] [INFO] Player UDP connection details saved for ID: 0
+[22-10-2025 02:43:08] [WARN] UDP packet from player 0 with no active game session.
+[22-10-2025 02:43:08] [WARN] UDP packet from player 0 with no active game session.
+[22-10-2025 02:43:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:43:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:43:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:43:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:43:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:43:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:43:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:43:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:43:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:43:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:43:12] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:08] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:09] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:09] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:10] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:10] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:11] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:11] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:14] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:21] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:21] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:22] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:23] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:23] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:23] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:23] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:23] [INFO] Player 4 attacked in game 50
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:44:23] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:44:23] [INFO] Game over for game ID: 50
+[22-10-2025 02:44:23] [WARN] UDP packet from player 4 with no active game session.
+[22-10-2025 02:44:53] [INFO] Client said disconnected.
+[22-10-2025 02:44:53] [INFO] User state updated for said to offline
+[22-10-2025 02:44:53] [INFO] Executing query to find player by username: said
+[22-10-2025 02:44:53] [INFO] Player found: said
+[22-10-2025 02:44:53] [INFO] Player UDP connection details removed for ID: 1
+[22-10-2025 02:44:55] [INFO] Client sac disconnected.
+[22-10-2025 02:44:55] [INFO] User state updated for sac to offline
+[22-10-2025 02:44:55] [INFO] Executing query to find player by username: sac
+[22-10-2025 02:44:55] [INFO] Player found: sac
+[22-10-2025 02:44:55] [INFO] Player UDP connection details removed for ID: 4
+[22-10-2025 02:44:58] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:44:58] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:45:04] [INFO] Request received: login from unknown user
+[22-10-2025 02:45:04] [INFO] Login attempt for user: sac
+[22-10-2025 02:45:04] [INFO] Executing query to find player by username: sac
+[22-10-2025 02:45:04] [INFO] Player found: sac
+[22-10-2025 02:45:05] [INFO] Login successful for user: sac
+[22-10-2025 02:45:05] [INFO] User state updated for sac to offline
+[22-10-2025 02:45:05] [INFO] User sac logged in and added to connected clients.
+[22-10-2025 02:45:05] [INFO] Encrypted data sent to client.
+[22-10-2025 02:45:09] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:45:09] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:45:16] [INFO] Request received: login from unknown user
+[22-10-2025 02:45:16] [INFO] Login attempt for user: said
+[22-10-2025 02:45:16] [INFO] Executing query to find player by username: said
+[22-10-2025 02:45:16] [INFO] Player found: said
+[22-10-2025 02:45:17] [INFO] Login successful for user: said
+[22-10-2025 02:45:17] [INFO] User state updated for said to offline
+[22-10-2025 02:45:17] [INFO] User said logged in and added to connected clients.
+[22-10-2025 02:45:17] [INFO] Encrypted data sent to client.
+[22-10-2025 02:45:17] [INFO] Request received: get_online_users from said
+[22-10-2025 02:45:17] [INFO] Fetching online users
+[22-10-2025 02:45:17] [INFO] Found 2 online users
+[22-10-2025 02:45:17] [INFO] Encrypted data sent to client.
+[22-10-2025 02:45:19] [INFO] Request received: create_game from said
+[22-10-2025 02:45:19] [INFO] Executing query to find player by username: said
+[22-10-2025 02:45:19] [INFO] Player found: said
+[22-10-2025 02:45:19] [INFO] New game created with ID: 51
+[22-10-2025 02:45:19] [INFO] User said registered to game 51
+[22-10-2025 02:45:19] [INFO] Game created by host said with ID: 51
+[22-10-2025 02:45:19] [INFO] Encrypted data sent to client.
+[22-10-2025 02:45:19] [INFO] Request received: SEND_INVITATION from said
+[22-10-2025 02:45:19] [INFO] Executing query to find player by username: sac
+[22-10-2025 02:45:19] [INFO] Player found: sac
+[22-10-2025 02:45:19] [INFO] Finding game by ID: 51
+[22-10-2025 02:45:19] [INFO] User sac registered to game 51
+[22-10-2025 02:45:19] [INFO] Invitation sent to sac for game 51
+[22-10-2025 02:45:19] [INFO] Sent message to sac: {"notificationType":"GAME_INVITATION","payload":{"inviterUsername":"said","invitedUsername":"sac","gameId":51}}
+[22-10-2025 02:45:22] [INFO] Request received: get_online_users from sac
+[22-10-2025 02:45:22] [INFO] Fetching online users
+[22-10-2025 02:45:22] [INFO] Found 2 online users
+[22-10-2025 02:45:22] [INFO] Encrypted data sent to client.
+[22-10-2025 02:45:24] [INFO] Request received: ACCEPT_INVITATION from sac
+[22-10-2025 02:45:24] [INFO] Finding invitation for game 51 and user sac
+[22-10-2025 02:45:24] [INFO] Invitation updated for game 51
+[22-10-2025 02:45:24] [INFO] User sac accepted invitation for game 51
+[22-10-2025 02:45:24] [INFO] Game status updated for game 51 to true
+[22-10-2025 02:45:24] [INFO] Game 51 has been started.
+[22-10-2025 02:45:24] [INFO] Executing query to find player by username: said
+[22-10-2025 02:45:24] [INFO] Player found: said
+[22-10-2025 02:45:24] [INFO] Executing query to find player by username: sac
+[22-10-2025 02:45:24] [INFO] Player found: sac
+[22-10-2025 02:45:24] [INFO] Game session created for game ID: 51
+[22-10-2025 02:45:24] [INFO] Sent message to said: {"notificationType":"INVITATION_ACCEPTED","payload":{"gameId":"51","acceptedBy":"sac"}}
+[22-10-2025 02:45:24] [INFO] Sent message to sac: {"notificationType":"INVITATION_ACCEPTED","payload":{"gameId":"51","acceptedBy":"sac"}}
+[22-10-2025 02:45:25] [INFO] Player UDP connection details saved for ID: 1
+[22-10-2025 02:45:25] [INFO] Player 1 confirmed join via UDP.
+[22-10-2025 02:45:25] [INFO] Player UDP connection details saved for ID: 4
+[22-10-2025 02:45:25] [INFO] Player 4 confirmed join via UDP.
+[22-10-2025 02:45:25] [WARN] UDP packet from player 0 with no active game session.
+[22-10-2025 02:45:25] [WARN] UDP packet from player 0 with no active game session.
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:27] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:30] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:30] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:30] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:30] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:30] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:30] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:30] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:31] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:32] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:45] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:45] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:45] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:45] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:46] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:47] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:47] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:48] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:48] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Player 1 attacked in game 51
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 1
+[22-10-2025 02:45:49] [INFO] Encrypted UDP data sent to player: 4
+[22-10-2025 02:45:49] [INFO] Game over for game ID: 51
+[22-10-2025 02:45:49] [WARN] UDP packet from player 1 with no active game session.
+[22-10-2025 02:46:08] [INFO] Client sac disconnected.
+[22-10-2025 02:46:08] [INFO] User state updated for sac to offline
+[22-10-2025 02:46:08] [INFO] Executing query to find player by username: sac
+[22-10-2025 02:46:08] [INFO] Player found: sac
+[22-10-2025 02:46:08] [INFO] Player UDP connection details removed for ID: 4
+[22-10-2025 02:46:10] [INFO] Client said disconnected.
+[22-10-2025 02:46:10] [INFO] User state updated for said to offline
+[22-10-2025 02:46:10] [INFO] Executing query to find player by username: said
+[22-10-2025 02:46:10] [INFO] Player found: said
+[22-10-2025 02:46:10] [INFO] Player UDP connection details removed for ID: 1
+[22-10-2025 02:48:34] [INFO] UDP service is now listening on port 9876
+[22-10-2025 02:48:34] [INFO] TCP socket: listening in port 5000
+[22-10-2025 02:48:40] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:48:40] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:48:47] [INFO] Request received: login from unknown user
+[22-10-2025 02:48:47] [INFO] Login attempt for user: said
+[22-10-2025 02:48:51] [INFO] Executing query to find player by username: said
+[22-10-2025 02:48:51] [INFO] Player found: said
+[22-10-2025 02:48:51] [INFO] Login successful for user: said
+[22-10-2025 02:48:52] [INFO] User state updated for said to offline
+[22-10-2025 02:48:52] [INFO] User said logged in and added to connected clients.
+[22-10-2025 02:48:52] [INFO] Encrypted data sent to client.
+[22-10-2025 02:48:55] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:48:55] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:48:55] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[22-10-2025 02:48:55] [WARN] Unknown request type: GET_PLAYER_RANK
+[22-10-2025 02:49:02] [INFO] Client said disconnected.
+[22-10-2025 02:49:03] [INFO] User state updated for said to offline
+[22-10-2025 02:49:03] [INFO] Executing query to find player by username: said
+[22-10-2025 02:49:03] [INFO] Player found: said
+[22-10-2025 02:49:03] [WARN] Attempted to remove non-existent UDP connection for player ID: 1
+[22-10-2025 02:51:44] [INFO] UDP service is now listening on port 9876
+[22-10-2025 02:51:44] [INFO] TCP socket: listening in port 5000
+[22-10-2025 02:51:48] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:51:48] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:51:55] [INFO] Request received: login from unknown user
+[22-10-2025 02:51:55] [INFO] Login attempt for user: said
+[22-10-2025 02:51:59] [INFO] Executing query to find player by username: said
+[22-10-2025 02:52:00] [INFO] Player found: said
+[22-10-2025 02:52:00] [INFO] Login successful for user: said
+[22-10-2025 02:52:00] [INFO] User state updated for said to offline
+[22-10-2025 02:52:00] [INFO] User said logged in and added to connected clients.
+[22-10-2025 02:52:00] [INFO] Encrypted data sent to client.
+[22-10-2025 02:52:02] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:52:02] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:52:02] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[22-10-2025 02:52:02] [WARN] Unknown request type: GET_PLAYER_RANK
+[22-10-2025 02:52:08] [INFO] Client said disconnected.
+[22-10-2025 02:52:08] [INFO] User state updated for said to offline
+[22-10-2025 02:52:08] [INFO] Executing query to find player by username: said
+[22-10-2025 02:52:08] [INFO] Player found: said
+[22-10-2025 02:52:08] [WARN] Attempted to remove non-existent UDP connection for player ID: 1
+[22-10-2025 02:52:31] [INFO] UDP service is now listening on port 9876
+[22-10-2025 02:52:31] [INFO] TCP socket: listening in port 5000
+[22-10-2025 02:52:40] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:52:40] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:52:48] [INFO] Request received: login from unknown user
+[22-10-2025 02:52:48] [INFO] Login attempt for user: said
+[22-10-2025 02:52:53] [INFO] Executing query to find player by username: said
+[22-10-2025 02:52:53] [INFO] Player found: said
+[22-10-2025 02:52:53] [INFO] Login successful for user: said
+[22-10-2025 02:52:53] [INFO] User state updated for said to offline
+[22-10-2025 02:52:53] [INFO] User said logged in and added to connected clients.
+[22-10-2025 02:52:53] [INFO] Encrypted data sent to client.
+[22-10-2025 02:52:55] [INFO] Client connected: /127.0.0.1
+[22-10-2025 02:52:55] [INFO] Sent server public key to client: /127.0.0.1
+[22-10-2025 02:52:55] [INFO] Request received: GET_PLAYER_RANK from unknown user
+[22-10-2025 02:52:55] [INFO] Encrypted data sent to client.
+[22-10-2025 02:53:01] [INFO] Client said disconnected.
+[22-10-2025 02:53:01] [INFO] User state updated for said to offline
+[22-10-2025 02:53:01] [INFO] Executing query to find player by username: said
+[22-10-2025 02:53:01] [INFO] Player found: said
+[22-10-2025 02:53:01] [WARN] Attempted to remove non-existent UDP connection for player ID: 1

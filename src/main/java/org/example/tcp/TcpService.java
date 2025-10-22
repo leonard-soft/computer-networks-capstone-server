@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.example.dto.*;
 import org.example.dto.login.LoginResponseDTO;
+import org.example.dto.ranking.RankUserDto;
 import org.example.dto.register.RegisterDataDto;
 import org.example.dto.register.RegisterResponseDTO;
 import org.example.dto.verification_code.CodeDataDto;
@@ -12,6 +13,7 @@ import org.example.encrypt.GenerateAES;
 import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
 import org.example.service.MailService;
+import org.example.service.RankService;
 import org.example.service.RoomService;
 import org.example.service.UserService;
 
@@ -391,6 +393,21 @@ public class TcpService {
                                     out.flush();
                                 }
                                 break;
+                            case "GET_PLAYER_RANK":
+                                try {
+                                    System.out.println("REQUEST TYPE : GET_PLAYER_RANK");
+                                    RankService rankService = new RankService();
+                                    List<RankUserDto> users = rankService.getUserMatchRanking();
+                                    String jsonResponse = gson.toJson(users) + "\n";
+                                    sendEncryptedData(out, jsonResponse);
+                                } catch (Exception e) {
+                                    manageLogs.saveLog("ERROR", "Error processing GET_PLAYER_RANK: " + e.getMessage());
+                                    RegisterResponseDTO errorResponse = new RegisterResponseDTO(false, "Error: " + e.getMessage());
+                                    String jsonError = gson.toJson(errorResponse) + "\n";
+                                    out.write(jsonError.getBytes());
+                                    out.flush(); 
+                                }
+                                break;    
                             default:
                                 manageLogs.saveLog("WARN", "Unknown request type: " + req.getType());
                         }
