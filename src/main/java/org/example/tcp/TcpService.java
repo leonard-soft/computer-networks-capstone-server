@@ -313,19 +313,14 @@ public class TcpService {
                                 try {
                                     if (username == null)
                                         throw new IllegalStateException("User must be logged in to send invitations.");
-
-                                    RequestPayload payload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
-                                    String invitedUsername = payload.username;
-                                    int gameId = payload.idGame != 0 ? payload.idGame : payload.gameId;
-
-                                    if (invitedUsername == null) {
-                                        throw new IllegalArgumentException("Invited username is missing from payload.");
-                                    }
-                                    roomService.createInvitation(gameId, invitedUsername);
-
-                                    InvitationPayload notificationPayload = new InvitationPayload(username, invitedUsername, gameId);
-
-                                    sendMessageToUser(invitedUsername, new NotificationDTO("GAME_INVITATION", notificationPayload));
+                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()),
+                                            InvitationPayload.class);
+                                    roomService.createInvitation(invPayload.getGameId(),
+                                            invPayload.getInvitedUsername());
+                                    InvitationPayload notificationPayload = new InvitationPayload(username,
+                                            invPayload.getInvitedUsername(), invPayload.getGameId());
+                                    sendMessageToUser(req.getPayload().username,
+                                            new NotificationDTO("GAME_INVITATION", notificationPayload));
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error processing SEND_INVITATION: " + e.getMessage());
                                 }
@@ -334,15 +329,13 @@ public class TcpService {
                                 try {
                                     if (username == null)
                                         throw new IllegalStateException("User must be logged in to deny invitations.");
-
-                                    RequestPayload payload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
-                                    String inviterUsername = payload.username;
-                                    int gameId = payload.idGame != 0 ? payload.idGame : payload.gameId;
-
-                                    roomService.respondToInvitation(gameId, username, false);
-
-                                    Map<String, String> notificationPayload = Map.of("deniedBy", username, "gameId", String.valueOf(gameId));
-                                    sendMessageToUser(inviterUsername, new NotificationDTO("INVITATION_DENIED", notificationPayload));
+                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()),
+                                            InvitationPayload.class);
+                                    roomService.respondToInvitation(invPayload.getGameId(), username, false);
+                                    Map<String, String> payload = Map.of("deniedBy", username, "gameId",
+                                            String.valueOf(invPayload.getGameId()));
+                                    sendMessageToUser(invPayload.getInviterUsername(),
+                                            new NotificationDTO("INVITATION_DENIED", payload));
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error processing DENY_INVITATION: " + e.getMessage());
                                 }
@@ -352,10 +345,10 @@ public class TcpService {
                                     if (username == null)
                                         throw new IllegalStateException(
                                                 "User must be logged in to accept invitations.");
-
-                                    RequestPayload payload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
-                                    String inviterUsername = payload.username;
-                                    int gameId = payload.idGame != 0 ? payload.idGame : payload.gameId;
+                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()),
+                                            InvitationPayload.class);
+                                    String inviterUsername = invPayload.getInviterUsername();
+                                    int gameId = invPayload.getGameId();
 
                                     roomService.respondToInvitation(gameId, username, true);
                                     roomService.startGame(gameId);
@@ -375,11 +368,8 @@ public class TcpService {
                                                 + gameId + ". One or more players not found.");
                                     }
 
-                                    Map<String, String> notificationPayload = Map.of("acceptedBy", username, "gameId",
+                                    Map<String, String> payload = Map.of("acceptedBy", username, "gameId",
                                             String.valueOf(gameId));
-<<<<<<< HEAD
-                                    NotificationDTO notification = new NotificationDTO("INVITATION_ACCEPTED", notificationPayload);
-=======
                                     NotificationDTO acceptanceNotification = new NotificationDTO("INVITATION_ACCEPTED", payload);
                                     sendMessageToUser(inviterUsername, acceptanceNotification);
                                     sendMessageToUser(username, acceptanceNotification);
@@ -389,7 +379,6 @@ public class TcpService {
                                     NotificationDTO gameStartedNotification = new NotificationDTO("GAME_STARTED", gameStartPayload);
                                     sendMessageToUser(inviterUsername, gameStartedNotification);
                                     sendMessageToUser(username, gameStartedNotification);
->>>>>>> 22fd71e (fix: generate game a send notification)
 
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR",
