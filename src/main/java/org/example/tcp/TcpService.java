@@ -334,13 +334,15 @@ public class TcpService {
                                 try {
                                     if (username == null)
                                         throw new IllegalStateException("User must be logged in to deny invitations.");
-                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()),
-                                            InvitationPayload.class);
-                                    roomService.respondToInvitation(invPayload.getGameId(), username, false);
-                                    Map<String, String> payload = Map.of("deniedBy", username, "gameId",
-                                            String.valueOf(invPayload.getGameId()));
-                                    sendMessageToUser(invPayload.getInviterUsername(),
-                                            new NotificationDTO("INVITATION_DENIED", payload));
+
+                                    RequestPayload payload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    String inviterUsername = payload.username;
+                                    int gameId = payload.idGame != 0 ? payload.idGame : payload.gameId;
+
+                                    roomService.respondToInvitation(gameId, username, false);
+
+                                    Map<String, String> notificationPayload = Map.of("deniedBy", username, "gameId", String.valueOf(gameId));
+                                    sendMessageToUser(inviterUsername, new NotificationDTO("INVITATION_DENIED", notificationPayload));
                                 } catch (Exception e) {
                                     manageLogs.saveLog("ERROR", "Error processing DENY_INVITATION: " + e.getMessage());
                                 }
@@ -350,10 +352,10 @@ public class TcpService {
                                     if (username == null)
                                         throw new IllegalStateException(
                                                 "User must be logged in to accept invitations.");
-                                    InvitationPayload invPayload = gson.fromJson(gson.toJson(req.getPayload()),
-                                            InvitationPayload.class);
-                                    String inviterUsername = invPayload.getInviterUsername();
-                                    int gameId = invPayload.getGameId();
+
+                                    RequestPayload payload = gson.fromJson(gson.toJson(req.getPayload()), RequestPayload.class);
+                                    String inviterUsername = payload.username;
+                                    int gameId = payload.idGame != 0 ? payload.idGame : payload.gameId;
 
                                     roomService.respondToInvitation(gameId, username, true);
                                     roomService.startGame(gameId);
@@ -373,9 +375,9 @@ public class TcpService {
                                                 + gameId + ". One or more players not found.");
                                     }
 
-                                    Map<String, String> payload = Map.of("acceptedBy", username, "gameId",
+                                    Map<String, String> notificationPayload = Map.of("acceptedBy", username, "gameId",
                                             String.valueOf(gameId));
-                                    NotificationDTO notification = new NotificationDTO("INVITATION_ACCEPTED", payload);
+                                    NotificationDTO notification = new NotificationDTO("INVITATION_ACCEPTED", notificationPayload);
 
                                     sendMessageToUser(inviterUsername, notification);
                                     sendMessageToUser(username, notification);
