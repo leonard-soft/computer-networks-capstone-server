@@ -4077,3 +4077,7 @@
 [22-10-2025 02:53:01] [INFO] Executing query to find player by username: said
 [22-10-2025 02:53:01] [INFO] Player found: said
 [22-10-2025 02:53:01] [WARN] Attempted to remove non-existent UDP connection for player ID: 1
+[22-10-2025 03:11:39] [INFO] UDP service is now listening on port 9876
+[22-10-2025 03:11:39] [INFO] TCP socket: listening in port 5000
+[22-10-2025 03:12:42] [INFO] Client connected: /127.0.0.1
+[22-10-2025 03:12:42] [INFO] Sent server public key to client: /127.0.0.1

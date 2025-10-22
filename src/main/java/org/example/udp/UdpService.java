@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.example.dto.*;
 import org.example.encrypt.encryptData;
 import org.example.logs.ManageLogs;
+import org.example.service.RankService;
 import org.example.tcp.TcpService;
 
 import java.io.*;
@@ -113,7 +114,12 @@ private void processPacket(DataTransferDTO data) {
                     org.example.tcp.TcpService.activeGameSessions.remove(session.getGameId());
                 }
                 break;
-
+            
+            case "UPDATE_USER_VIC":
+                int winnerId = data.getIdPlayer();
+                RankService rankService = new RankService();
+                rankService.updateUserVictories(winnerId);
+                break;
             default:
                 manageLogs.saveLog("WARN", "Unknown UDP event type: " + data.getEventType());
                 break;

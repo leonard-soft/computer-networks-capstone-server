@@ -407,7 +407,7 @@ public class TcpService {
                                     out.write(jsonError.getBytes());
                                     out.flush(); 
                                 }
-                                break;    
+                                break;  
                             default:
                                 manageLogs.saveLog("WARN", "Unknown request type: " + req.getType());
                         }
