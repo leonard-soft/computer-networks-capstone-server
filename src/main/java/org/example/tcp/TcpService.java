@@ -370,6 +370,8 @@ public class TcpService {
                                     if (inviter != null && invitee != null) {
                                         GameSession session = new GameSession(gameId, inviter.getUserId(),
                                                 invitee.getUserId());
+                                        session.setPlayer1Health(100);
+                                        session.setPlayer2Health(100);
                                         activeGameSessions.put(gameId, session);
                                         manageLogs.saveLog("INFO", "Game session created for game ID: " + gameId);
                                     } else {
